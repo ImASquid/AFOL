@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect | A Fountain of Life</title>
+    
+    <script src="/js/tailwind.js"></script>
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/css2.css" rel="stylesheet">
+    
+    <style>
+        :root { --primary: #1a1c1e; --accent: #c5a059; }
+        body { font-family: 'Montserrat', sans-serif; background-color: white; color: #334155; margin: 0; }
+        .serif-italic { font-family: 'Cormorant Garamond', serif; font-style: italic; }
+        
+        /* Solid Gray Header Styling */
+        #header-placeholder { 
+            background-color: #1a1c1e;
+            position: relative; 
+            width: 100%; 
+            z-index: 50; 
+            min-height: 80px; /* Ensures space is reserved before component loads */
+        }
+        
+        /* Form focus transitions */
+        input:focus, textarea:focus, select:focus {
+            border-bottom-color: #c5a059 !important;
+        }
+
+        /* Smooth appearance for success message */
+        #success-state {
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+
+    <script>
+        async function loadComponent(id, file) {
+            try {
+                const element = document.getElementById(id);
+                const response = await fetch(file);
+                if (response.ok) { element.innerHTML = await response.text(); }
+            } catch (error) { console.error(`Error loading ${file}:`, error); }
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            loadComponent('header-placeholder', './components/header.html');
+            loadComponent('footer-placeholder', './components/footer.html');
+        });
+    </script>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <section class="bg-white pt-32 pb-16 flex items-center justify-center border-b border-gray-50">
+        <div class="text-center px-6">
+            <h1 class="text-[#1a1c1e] text-6xl md:text-8xl serif-italic font-light">Connect</h1>
+            <div class="w-16 h-[2px] bg-[#c5a059] mx-auto mt-8"></div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-stretch">
+
+                <div class="flex flex-col justify-between space-y-12">
+                    <div class="space-y-5">
+                        <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-[#c5a059]">
+                            The Connection
+                        </h2>
+                        <h3 class="text-5xl font-light serif-italic text-[#1f1f1f] leading-tight">
+                            We want to hear from you.
+                        </h3>
+                        <p class="text-gray-600 text-lg font-light leading-relaxed max-w-md">
+                            If you have a prayer request, a question about our ministries, or just want to say hello, please reach out. We are here to support you in your journey.
+                        </p>
+                    </div>
+
+                    <div class="border border-gray-100 bg-[#FDFCFB] p-8 shadow-sm">
+                        <div class="grid grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-[10px] font-bold uppercase tracking-[0.35em] text-gray-400 mb-3">
+                                    Service Times
+                                </h4>
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    Sun: <span class="font-medium">9:30 & 11:15 AM</span><br>
+                                    Wed: <span class="font-medium">7:30 PM</span>
+                                </p>
+                            </div>
+                            <div>
+                                <h4 class="text-[10px] font-bold uppercase tracking-[0.35em] text-gray-400 mb-3">
+                                    Location
+                                </h4>
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    302 Millennium Drive<br>
+                                    Kyle, Texas 78640
+                                </p>
+                            </div>
+                            <div>
+                                <h4 class="text-[10px] font-bold uppercase tracking-[0.35em] text-gray-400 mb-3">
+                                    Phone
+                                </h4>
+                                <p class="text-lg font-medium text-[#2D2D2D] tracking-wide">
+                                    (512) 393 - 4460
+                                </p>
+                            </div>
+                            <div>
+                                <h4 class="text-[10px] font-bold uppercase tracking-[0.35em] text-gray-400 mb-3">
+                                    Email
+                                </h4>
+                                <p class="text-sm font-medium text-gray-700 break-all">
+                                    admin@afountain.org
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#FDFCFB] p-12 border border-gray-100 shadow-sm flex flex-col justify-between">
+                    <div id="form-wrapper">
+                        <h3 class="text-3xl font-light serif-italic text-[#1f1f1f] mb-2">
+                            Send a Message
+                        </h3>
+                        <p class="text-gray-500 text-sm mb-10">
+                            Please complete the details below to reach our team.
+                        </p>
+
+                        <form id="ajax-form" action="https://formspree.io/f/xyklvnje" method="POST" class="space-y-6">
+                            <div class="grid grid-cols-2 gap-6">
+                                <input type="text" name="name" placeholder="Full Name" required
+                                    class="w-full bg-transparent border-b border-gray-200 py-3 outline-none transition-colors text-base font-light">
+                                <input type="email" name="email" placeholder="Email Address" required
+                                    class="w-full bg-transparent border-b border-gray-200 py-3 outline-none transition-colors text-base font-light">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-6">
+                                <input type="tel" name="phone" placeholder="Phone Number"
+                                    class="w-full bg-transparent border-b border-gray-200 py-3 outline-none transition-colors text-base font-light">
+                                <select name="subject" required
+                                    class="w-full bg-transparent border-b border-gray-200 py-3 outline-none transition-colors text-base font-light text-gray-500">
+                                    <option value="" disabled selected>Inquiry Type</option>
+                                    <option value="General">General Inquiry</option>
+                                    <option value="Prayer">Prayer Request</option>
+                                    <option value="Ministry">Ministry Question</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <textarea name="message" placeholder="Your message or prayer request..."
+                                rows="4" required
+                                class="w-full bg-transparent border-b border-gray-200 py-4 outline-none transition-colors text-base font-light resize-none"
+                            ></textarea>
+
+                            <input type="text" name="_gotcha" style="display:none">
+
+                            <button type="submit" id="submit-btn"
+                                class="w-full bg-[#2D2D2D] text-white py-5 text-xs font-bold uppercase tracking-[0.35em] hover:bg-[#c5a059] transition-all duration-500">
+                                Submit Message
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="success-state" class="hidden text-center py-20">
+                        <i class="fas fa-check-circle text-[#c5a059] text-5xl mb-6"></i>
+                        <h3 class="text-3xl font-light serif-italic text-[#1f1f1f] mb-2">Thank You</h3>
+                        <p class="text-gray-500">Your message has been sent successfully. We will reach out to you shortly.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const form = document.getElementById("ajax-form");
+        const formWrapper = document.getElementById("form-wrapper");
+        const successState = document.getElementById("success-state");
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const btn = document.getElementById("submit-btn");
+            const data = new FormData(event.target);
+            
+            btn.innerHTML = "SENDING...";
+            btn.disabled = true;
+
+            fetch(event.target.action, {
+                method: form.method,
+                body: data,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    formWrapper.classList.add("hidden");
+                    successState.classList.remove("hidden");
+                } else {
+                    btn.innerHTML = "SUBMIT MESSAGE";
+                    btn.disabled = false;
+                    alert("Oops! There was a problem submitting your form.");
+                }
+            }).catch(error => {
+                btn.innerHTML = "SUBMIT MESSAGE";
+                btn.disabled = false;
+                alert("Oops! There was a problem connecting to the server.");
+            });
+        }
+        form.addEventListener("submit", handleSubmit);
+    </script>
+
+</body>
+</html>

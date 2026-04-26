@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Fountain of Life | Kyle, TX</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="/js/tailwind.js"></script>
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/css2.css" rel="stylesheet">
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/swiper-bundle.min.css" />
+    <script src="/js/swiper-bundle.min.js"></script>
     
     <style>
         :root { --primary: #1a1c1e; --accent: #c5a059; --cream: #f9f7f2; }
@@ -18,8 +18,10 @@
         h1, h2, h3, h4, .serif { font-family: 'Cormorant Garamond', serif; }
         .hero-overlay { background: linear-gradient(to right, rgba(26, 28, 30, 0.9) 30%, rgba(26, 28, 30, 0.2) 100%); }
         .btn-gold { background-color: var(--accent); color: white; transition: all 0.3s ease; }
+        .btn-gold:hover { background-color: #b08d48; transform: translateY(-2px); }
         .section-line { width: 60px; height: 2px; background-color: var(--accent); margin: 1.5rem 0; }
         #header-placeholder { position: absolute; top: 0; width: 100%; z-index: 50; }
+        
         .fade-in { animation: fadeIn 1.2s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -43,10 +45,14 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            // Core UI Components
             loadComponent('header-placeholder', './components/header.html');
-            loadComponent('online-viewing-placeholder', './components/online-viewing.html');
-            loadComponent('announcements-placeholder', './components/announcements.html');
             loadComponent('footer-placeholder', './components/footer.html');
+            
+            // Dynamic Sections
+            loadComponent('online-viewing-placeholder', './components/online-viewing.html');
+            loadComponent('photo-carousel-placeholder', './components/photo-carousel.html');
+            loadComponent('announcements-placeholder', './components/announcements.html');
         });
     </script>
 </head>
@@ -55,12 +61,12 @@
     <div id="header-placeholder"></div>
 
     <section class="relative h-screen flex items-center overflow-hidden bg-[#1a1c1e]">
-        <img src="https://images.unsplash.com/photo-1510590337019-5ef8d3d32116?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Church Background">
+        <img src="/images/indexHero.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Church Background">
         <div class="absolute inset-0 hero-overlay"></div>
         <div class="relative max-w-7xl mx-auto px-8 w-full fade-in">
             <div class="max-w-2xl">
                 <span class="text-[#c5a059] uppercase tracking-[0.3em] text-sm font-bold">Welcome to AFOL</span>
-                <h1 class="text-white text-6xl md:text-8xl mt-4 mb-8 leading-tight">Life. Truth. <br><span class="italic text-slate-300">Worship.</span></h1>
+                <h1 class="text-white text-6xl md:text-8xl mt-4 mb-8 leading-tight">Gospel. Truth. <br><span class="italic text-slate-300">Worship.</span></h1>
                 <div class="flex space-x-6">
                     <a href="#services" class="btn-gold px-10 py-4 font-bold uppercase text-xs tracking-widest shadow-xl">Join Us</a>
                     <a href="#online-viewing" class="text-white border-b border-white/30 py-4 hover:border-[#c5a059] transition uppercase text-xs tracking-widest font-bold">Watch Online</a>
@@ -73,15 +79,15 @@
         <div class="max-w-6xl mx-auto bg-white shadow-2xl grid md:grid-cols-3">
             <div class="p-12 border-r border-slate-100 group hover:bg-slate-50 transition">
                 <h4 class="serif text-3xl mb-4">Sundays</h4><div class="section-line"></div>
-                <p class="text-slate-500 text-sm">9:30 AM & 11:15 AM</p>
+                <p class="text-slate-500 text-sm">9:30 AM & 11:15 AM; Full one hour services, with both teaching and worship.</p>
             </div>
             <div class="p-12 border-r border-slate-100 group hover:bg-slate-50 transition">
                 <h4 class="serif text-3xl mb-4">Wednesdays</h4><div class="section-line"></div>
-                <p class="text-slate-500 text-sm">7:30 PM; Bible Study.</p>
+                <p class="text-slate-500 text-sm">7:30 PM; Bible Study; Getting deep into the word with our one hour bible study.</p>
             </div>
             <div class="p-12 group hover:bg-slate-50 transition">
                 <h4 class="serif text-3xl mb-4">Fridays</h4><div class="section-line"></div>
-                <p class="text-slate-500 text-sm">Youth Service at 6:30 PM.</p>
+                <p class="text-slate-500 text-sm">Youth Service at 6:30 PM; From ages 12-18, enjoy engaging teaching, games and fellowship.</p>
             </div>
         </div>
     </section>
@@ -93,7 +99,7 @@
             <div class="relative flex flex-col lg:flex-row items-center">
                 <div class="w-full lg:w-3/5 relative">
                     <div class="aspect-[3/2] overflow-hidden shadow-2xl rounded-sm">
-                        <img src="https://afountain.org/wp-content/uploads/2023/07/Fletcher-Family-006-1-1024x681.jpg" class="w-full h-full object-cover object-top transition duration-700 hover:scale-105">
+                        <img src="https://afountain.org/wp-content/uploads/2023/07/Fletcher-Family-006-1-1024x681.jpg" class="w-full h-full object-cover object-top transition duration-700 hover:scale-105" alt="Pastors Fletcher">
                     </div>
                 </div>
                 <div class="w-full lg:w-1/2 lg:-ml-20 mt-12 lg:mt-0 relative z-10">
@@ -101,13 +107,15 @@
                         <span class="text-[#c5a059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-4">Our Leadership</span>
                         <h2 class="serif text-4xl md:text-5xl mb-6">Pastors Rusty & <br>Lyudmila Fletcher</h2>
                         <div class="section-line"></div>
-                        <p class="text-slate-600 leading-loose mb-6 text-sm">Their heart is to see people transformed by the power of God's Word.</p>
+                        <p class="text-slate-600 leading-loose mb-6 text-sm">Their heart is to see people transformed by the power of God's Word through life, truth, and worship.</p>
                         <a href="about-us.html" class="text-[#c5a059] font-bold uppercase text-[11px] tracking-widest border-b-2 border-[#c5a059]/20 pb-1 hover:border-[#c5a059] transition-all">Read Our Story</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <div id="photo-carousel-placeholder"></div>
 
     <div id="announcements-placeholder"></div>
 

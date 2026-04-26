@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story | A Fountain of Life</title>
+    
+    <script src="/js/tailwind.js"></script>
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/css2.css" rel="stylesheet">
+    
+    <style>
+        :root { --primary: #1a1c1e; --accent: #c5a059; --cream: #f9f7f2; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--cream); color: #334155; line-height: 1.8; }
+        h1, h2, h3, h4, .serif { font-family: 'Cormorant Garamond', serif; }
+        .hero-overlay { background: linear-gradient(rgba(26, 28, 30, 0.85), rgba(26, 28, 30, 0.85)); }
+        .section-line { width: 60px; height: 2px; background-color: var(--accent); margin: 1.5rem 0; }
+        .story-text { font-size: 1.1rem; color: #475569; }
+        .story-text p { margin-bottom: 2rem; }
+        #header-placeholder { position: absolute; top: 0; width: 100%; z-index: 50; }
+        .dropcap::first-letter {
+            font-family: 'Cormorant Garamond', serif;
+            float: left;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 0.5rem;
+            color: var(--accent);
+        }
+    </style>
+
+    <script>
+        async function loadComponent(id, file) {
+            try {
+                const element = document.getElementById(id);
+                const response = await fetch(file);
+                if (response.ok) {
+                    element.innerHTML = await response.text();
+                }
+            } catch (error) { console.error(`Error loading ${file}:`, error); }
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            loadComponent('header-placeholder', './components/header.html');
+            loadComponent('footer-placeholder', './components/footer.html');
+        });
+    </script>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <section class="relative h-[60vh] flex items-center justify-center bg-[#1a1c1e]">
+        <img src="/images/aboutUsHero.jpg" class="absolute inset-0 w-full h-full object-cover opacity-30">
+        <div class="absolute inset-0 hero-overlay"></div>
+        <div class="relative text-center px-4">
+            <span class="text-[#c5a059] uppercase tracking-[0.5em] text-sm font-bold">A Fountain of Life</span>
+            <h1 class="text-white text-6xl md:text-8xl mt-4">About Us</h1>
+        </div>
+    </section>
+
+        <style>
+        /* Clean, professional shadow for the cinematic cards */
+        .card-shadow {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        /* Ensure photos don't look overly zoomed */
+        .leadership-img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+    <section class="py-24 px-6 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-[#c5a059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-4">Our Team</span>
+                <h2 class="serif text-5xl">Leadership & Board of Elders</h2>
+                <div class="section-line mx-auto"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                
+                <div class="text-center">
+                    <div class="aspect-[4/5] bg-slate-100 mb-6 overflow-hidden card-shadow rounded-sm">
+                        <img src="https://afountain.org/wp-content/uploads/2023/07/Fletcher-Family-006-1-1024x681.jpg" 
+                            class="leadership-img" style="object-position: center 15%;">
+                    </div>
+                    <h3 class="text-2xl">Rusty & Lyudmila Fletcher</h3>
+                    <p class="text-[#c5a059] uppercase text-[10px] tracking-widest font-bold mt-2">Senior Pastors</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="aspect-[4/5] bg-slate-100 mb-6 overflow-hidden card-shadow rounded-sm">
+                        <img src="https://afountain.org/wp-content/uploads/2023/09/AFOL-Portraits-2-1024x681.jpg" 
+                            class="leadership-img" style="object-position: center 25%;">
+                    </div>
+                    <h3 class="text-2xl">Andrew Lujan</h3>
+                    <p class="text-[#c5a059] uppercase text-[10px] tracking-widest font-bold mt-2">Youth Pastor</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="aspect-[4/5] bg-slate-100 mb-6 overflow-hidden card-shadow rounded-sm">
+                        <img src="https://afountain.org/wp-content/uploads/2023/09/AFOL-Portraits-1-1024x681.jpg" 
+                            class="leadership-img" style="object-position: center 20%;">
+                    </div>
+                    <h3 class="text-2xl">Kellie Sanchez</h3>
+                    <p class="text-[#c5a059] uppercase text-[10px] tracking-widest font-bold mt-2">Worship Leader</p>
+                </div>
+            </div>
+
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+                
+                <div class="text-center">
+                    <div class="aspect-video bg-slate-100 mb-6 overflow-hidden card-shadow rounded-sm">
+                        <img src="https://afountain.org/wp-content/uploads/2025/05/AFOL_Elders-Photos-1-1024x681.jpg" 
+                            class="leadership-img" style="object-position: center 35%;">
+                    </div>
+                    <h3 class="text-2xl">Jose & Rosy Ruiz</h3>
+                    <p class="text-[#c5a059] uppercase text-[10px] tracking-widest font-bold mt-2">Board of Elders</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="aspect-video bg-slate-100 mb-6 overflow-hidden card-shadow rounded-sm">
+                        <img src="https://afountain.org/wp-content/uploads/2025/05/AFOL_Elders-Photos-2-1024x681.jpg" 
+                            class="leadership-img" style="object-position: center 40%;">
+                    </div>
+                    <h3 class="text-2xl">Jerry & Karen</h3>
+                    <p class="text-[#c5a059] uppercase text-[10px] tracking-widest font-bold mt-2">Board of Elders</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 px-8 bg-white">
+        <div class="max-w-4xl mx-auto">
+            <span class="text-[#c5a059] uppercase tracking-[0.3em] text-xs font-bold block mb-4 text-center">Life & Ministry</span>
+            <h2 class="text-5xl text-center mb-16">Pastor Rusty Fletcher</h2>
+            
+            <div class="story-text dropcap">
+                <p>When Rusty Fletcher was seventeen years old he had a personal encounter with God. After his experience he dedicated his life to knowing and pursuing a deeper relationship with God. He told many people about what Jesus Christ… the Son of God… had done in his life and led them to accept Jesus Christ as their Savior!</p>
+                
+                <p>When Rusty was 22 years old he started traveling as a full-time evangelist, speaking mostly in Pentecostal churches. In 1979 he was ordained into The United Pentecostal Church International. In the 90’s Pastor Rusty attended “Rhema Bible Training Center” in Oklahoma and graduated in 1996. After graduating he continued to travel and speak as an evangelist and Bible teacher.</p>
+                
+                <p>In 2001 he traveled to the Ukraine where he did missionary evangelism. In the Ukraine he met his wife Lyudmila. They were married in October of 2001 and in May of 2002 they moved to Seguin, Texas. There he served as an associate pastor at Calvary Gospel Church for five years. Rusty and Lyudmila now have three children… Ana, Kellie, and Joseph.</p>
+                
+                <p>In 2007 – 2008 Rusty and Lyudmila felt God leading them to plant a new church in the Kyle and Buda, Texas area. They rented a classroom at Tom Green Elementary School in Buda, Texas and on October 5th, 2008 had their first service. After five months the church moved from the classroom into the cafeteria of Tom Green Elementary. In October of 2014 the church moved to it’s current location at 302 Millennium Dr in Kyle, Texas. God has abundantly blessed the church and congregation!</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 px-8 bg-[#f9f7f2] border-y border-slate-200">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white p-12 md:p-20 shadow-xl relative">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#c5a059] text-white p-4 rounded-full">
+                    <i class="fas fa-quote-right text-2xl"></i>
+                </div>
+                
+                <div class="text-center mb-12">
+                    <p class="text-slate-400 text-xs uppercase tracking-widest mb-4">Published in The Fletcher Family Directory (2008)</p>
+                    <h2 class="serif text-4xl mb-2">"What Family Means to Me"</h2>
+                    <p class="text-[#c5a059] font-bold italic">By: Lyudmila Fletcher</p>
+                    <div class="section-line mx-auto"></div>
+                </div>
+
+                <div class="story-text italic text-slate-600">
+                    <p>I was born on October 13, 1975 in the city of Kremenchug, Ukraine. My father Peter M. Krivulia was working at the time, at a big agriculture organization in Kremenchuk. My mother, Olga A. Krivulia was working at a shoe factory. Since my parents worked five days a week, they decided to hire a nanny to take care of me while they were at work.</p>
+                    
+                    <p>At the time I was born, my father and mother were renting a cozy little house. When I was five years old, my mother and father bought a nice apartment. I remember when we were moving into our own home that my mother was pregnant. Dad always talked to me, and told me that it was a good thing to have a baby brother, but I always wanted a baby sister.</p>
+
+                    <p>On March 7, 1980, my brother arrived in this world. In 1982 I went to elementary school. I was making all A’s and I was very active in choir and Ukrainian culture dances. Our dance group was called Sweetanak. We received a lot of trophies, which were 1st and 2nd place. In 5th grade I was elected class president, a position I held until 8th grade. Through middle and high school, I represented the school in track, winning 1st and 2nd place in my district.</p>
+                    
+                    <p>When I was 18 years old, a very big tragedy came to our family. My father died. I realized after my dad died, more than ever how important my family was to me. We missed him so much. My mom struggled to pay bills, and she finally sold daddy’s car; that helped some.</p>
+                    
+                    <p>I finished Pedagogy school in 1995 and started to work as a 1st-grade teacher. Two months later, the government offered to continue my education in college for free, and I started at the Poltava State Pedagogical Institute. I married at 21, but the marriage did not last long. Ana was born one year later, which meant I had to work and go to college while taking care of my baby. This was a very difficult time, but God helped me through it.</p>
+
+                    <p>My uncle Andrey and his wife Valentina always encouraged me and gave me hope. They were born again, Spirit-filled Christians. They gave me many books by Kenneth Hagin in the Russian version. One day, I decided to give my heart to Jesus Christ. Only now do I understand that while I was reading those books, my future husband, Rusty, was attending Kenneth Hagin’s Bible College in Oklahoma, listening to him daily.</p>
+                    
+                    <p>One day I had a dream. I dreamed I was in a boat on a lake, and the boat was slowly sinking. Suddenly I saw another boat coming toward me. There was a single man in the boat—I could not see his face, but I knew he came to rescue me. He gave me his hand and put me in his boat. When I received Jesus Christ, He assured me I will never be alone anymore.</p>
+
+                    <p>In January of 2001, I began to communicate with Rusty through the Internet. In July, Rusty and his parents came to visit me in the Ukraine. During that visit, God gave me another dream. In my dream, Rusty came into my bedroom and took all the old sheets from my bed and put new clean sheets on! I believe God was showing me that Rusty was going to marry me and we would start a new life together.</p>
+                    
+                    <p>On October 10th, 2001, we were married in Kiev. On May 15th, 2002, Ana and I arrived in Texas. In 2003, God blessed us with a second beautiful daughter, Kellie Ethelene Fletcher. Today I am very proud of my family and I thank God for finding me, saving me, and putting our family together!</p>
+                    
+                    <p>I cherish each moment with Ana, Kellie, and Rusty because I know I can never relive that day. We teach our children that family and church are the most important parts of their lives. Their school friends may be part of their lives for a season, but family will always remain the same.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ministries | A Fountain of Life</title>
+    
+    <script src="/js/tailwind.js"></script>
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/css2.css" rel="stylesheet">
+    
+    <style>
+        :root { --primary: #1a1c1e; --accent: #c5a059; }
+        body { font-family: 'Montserrat', sans-serif; background-color: white; color: #334155; margin: 0; }
+        h1, h2, h3, .serif { font-family: 'Cormorant Garamond', serif; }
+        
+        .hero-overlay { background: linear-gradient(rgba(26, 28, 30, 0.4), rgba(26, 28, 30, 0.7)); }
+        .section-line { width: 60px; height: 2px; background-color: var(--accent); margin: 1.5rem 0; }
+        
+        .ministry-img {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 0.5s ease;
+        }
+        .ministry-img:hover { transform: scale(1.02); }
+
+        #header-placeholder { position: absolute; top: 0; width: 100%; z-index: 50; }
+    </style>
+
+    <script>
+        async function loadComponent(id, file) {
+            try {
+                const element = document.getElementById(id);
+                const response = await fetch(file);
+                if (response.ok) { element.innerHTML = await response.text(); }
+            } catch (error) { console.error(`Error loading ${file}:`, error); }
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            loadComponent('header-placeholder', './components/header.html');
+            loadComponent('footer-placeholder', './components/footer.html');
+        });
+    </script>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <section class="relative h-[60vh] flex items-center justify-center bg-[#1a1c1e]">
+        <img src="https://afountain.org/wp-content/uploads/2021/04/Final-2-1024x538.jpg" class="absolute inset-0 w-full h-full object-cover opacity-40">
+        <div class="absolute inset-0 hero-overlay"></div>
+        <div class="relative text-center px-6">
+            <h1 class="text-white text-6xl md:text-8xl">Ministries</h1>
+            <div class="section-line mx-auto"></div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 overflow-hidden">
+        <div class="max-w-7xl mx-auto space-y-32">
+            
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1">
+                    <span class="text-[#c5a059] uppercase tracking-[0.4em] text-xs font-bold block mb-4">Ages 0 - 3</span>
+                    <h2 class="serif text-5xl mb-6">Nursery</h2>
+                    <div class="section-line"></div>
+                    <p class="text-lg leading-loose text-slate-600 mb-8">
+                        Nursery care is provided each Sunday morning during both services and on Wednesday evenings. Age-appropriate toys, games, and lessons are provided for toddlers in a safe, loving environment.
+                    </p>
+                    <p class="italic text-slate-400 text-sm">"I praise you because I am fearfully and wonderfully made..." — Psalm 139:1</p>
+                </div>
+                <div class="order-1 lg:order-2">
+                    <img src="https://afountain.org/wp-content/uploads/2024/07/AFOL-Nursery-1024x683.jpg" alt="Nursery" class="ministry-img w-full h-auto">
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="order-1">
+                    <img src="https://afountain.org/wp-content/uploads/2024/07/038-1024x768.jpg" alt="Children" class="ministry-img w-full h-auto">
+                </div>
+                <div class="order-2">
+                    <span class="text-[#c5a059] uppercase tracking-[0.4em] text-xs font-bold block mb-4">Ages 4 - 11</span>
+                    <h2 class="serif text-5xl mb-6">Children</h2>
+                    <div class="section-line"></div>
+                    <p class="text-lg leading-loose text-slate-600 mb-8">
+                        Our leaders work hard to make the children's ministry educational and fun. Classes are held during the 11:15 am service, featuring Bible lessons, crafts, games, and music.
+                    </p>
+                    <p class="italic text-slate-400 text-sm">"All your children will be taught by the LORD..." — Isaiah 54:13</p>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1">
+                    <span class="text-[#c5a059] uppercase tracking-[0.4em] text-xs font-bold block mb-4">Ages 12 - 18</span>
+                    <h2 class="serif text-5xl mb-6">Youth</h2>
+                    <div class="section-line"></div>
+                    <p class="text-lg leading-loose text-slate-600 mb-8">
+                        Youth gatherings are each Friday from 6:30 – 9:00 pm. The youth enjoy social activities, worship, teaching, and fellowship. Monthly off-site events include bowling, sports, and more.
+                    </p>
+                    <p class="italic text-slate-400 text-sm">"For I know the plans I have for you..." — Jeremiah 29:11</p>
+                </div>
+                <div class="order-1 lg:order-2">
+                    <img src="https://afountain.org/wp-content/uploads/2024/07/01-768x576.jpg" alt="Youth" class="ministry-img w-full h-auto">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="py-24 px-6 bg-[#f9f7f2]">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="serif text-5xl text-center mb-16">First Time Guest?</h2>
+            
+            <div class="grid md:grid-cols-2 gap-x-12 gap-y-12">
+                <div>
+                    <h3 class="serif text-2xl mb-3 border-b border-[#c5a059]/20 pb-2">Directions</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">Located in Kyle, TX on Millennium Drive. Detailed routing from I-35 or Hwy 21 is available on our Map page.</p>
+                </div>
+                <div>
+                    <h3 class="serif text-2xl mb-3 border-b border-[#c5a059]/20 pb-2">Attire</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">Casual or professional—however you are most comfortable. We want you to feel at home.</p>
+                </div>
+                <div>
+                    <h3 class="serif text-2xl mb-3 border-b border-[#c5a059]/20 pb-2">Service Style</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">Energetic contemporary worship followed by powerful, life-giving teaching from God's Word.</p>
+                </div>
+                <div>
+                    <h3 class="serif text-2xl mb-3 border-b border-[#c5a059]/20 pb-2">Meet the Pastors</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">Pastors Rusty and Lyudmila would love to meet you before or after any of our services!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-white text-center px-6">
+        <a href="connect.html" 
+           class="inline-block px-12 py-5 bg-[#c5a059] text-white uppercase text-xs font-bold tracking-[0.4em] transition-all duration-300 hover:brightness-90 shadow-md hover:shadow-lg">
+            Connect With Us
+        </a>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+</body>
+</html>
