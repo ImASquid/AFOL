@@ -7,28 +7,77 @@
     .nav-link { font-family: 'Montserrat', sans-serif; transition: all 0.3s ease; }
     .btn-gold { background-color: var(--accent); color: white; transition: all 0.3s ease; }
     .btn-gold:hover { background-color: #b08d48; transform: translateY(-2px); }
+
+    /* Force visibility logic */
+    #desktop-links { display: none !important; }
+    #mobile-toggle-wrapper { display: flex !important; }
+
+    @media (min-width: 1024px) {
+        #desktop-links { display: flex !important; }
+        #mobile-toggle-wrapper { display: none !important; }
+    }
 </style>
 
-<nav class="absolute w-full z-50 py-6">
-    <div class="max-w-7xl mx-auto px-8 flex justify-between items-center">
-        <a href="/index.html" class="text-white hover:opacity-80 transition">
+<nav id="main-nav" class="absolute w-full z-50 py-6 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-8 flex justify-between items-center relative">
+        
+        <a href="/index.html" class="text-white hover:opacity-80 transition relative z-[60]">
             <div class="text-2xl font-bold tracking-[0.2em] serif-font uppercase">A Fountain of Life</div>
             <div class="text-[10px] tracking-[0.4em] uppercase opacity-70 -mt-1">Worship Center</div>
         </a>
         
-        <div class="hidden lg:flex space-x-6 text-white text-[10px] uppercase tracking-widest font-semibold items-center nav-link">
+        <div id="desktop-links" class="items-center space-x-6 text-white text-[10px] uppercase tracking-widest font-semibold nav-link">
             <a href="/index.html" class="hover:text-[#c5a059]">Home</a>
             <a href="/about-us.html" class="hover:text-[#c5a059]">About Us</a>
             <a href="/our-vision.html" class="hover:text-[#c5a059]">Our Vision</a>
             <a href="/what-we-believe.html" class="hover:text-[#c5a059]">What We Believe</a>
             <a href="/ministries.html" class="hover:text-[#c5a059]">Ministries</a>
             <a href="/connect.html" class="hover:text-[#c5a059]">Connect</a>
-            <a href="https://www.google.com/maps/place/A+Fountain+of+Life+Worship+Center/@30.0302087,-97.7742175,17z/data=!3m1!4b1!4m6!3m5!1s0x8644aca4e6b3692f:0x81153d623eeee4ab!8m2!3d30.0302087!4d-97.7716426!16s%2Fg%2F11cn2myh3c?hl=en-US&entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D" class="hover:text-[#c5a059]">Map</a>
             <a href="https://app.securegive.com/AFountain/a-fountain-of-life" class="btn-gold px-5 py-2 ml-2 shadow-lg">Give</a>
         </div>
 
-        <div class="lg:hidden text-white text-2xl">
-            <i class="fas fa-bars cursor-pointer"></i>
+        <div id="mobile-toggle-wrapper">
+            <button 
+                id="mobile-menu-btn" 
+                type="button" 
+                onclick="window.toggleMobileMenu(true)" 
+                class="relative z-[110] p-2 -mr-2 bg-transparent border-none cursor-pointer">
+                <img src="images/menu.png" alt="Menu" class="w-6 h-6">
+            </button>
         </div>
     </div>
 </nav>
+
+<div id="mobile-menu" class="hidden fixed inset-0 bg-[#1a1c1e] z-[9999] flex flex-col justify-center items-center text-center">
+    <button type="button" onclick="window.toggleMobileMenu(false)" class="absolute top-8 right-8 text-white p-4">
+        <span class="text-4xl font-light leading-none transition-opacity hover:opacity-70" style="font-family: Arial, sans-serif;">&times;</span>
+    </button>
+    
+    <div class="space-y-8 flex flex-col items-center">
+        <a href="/index.html" onclick="window.toggleMobileMenu(false)" class="text-white text-xs font-bold uppercase tracking-[0.4em] hover:text-[#c5a059]">Home</a>
+        <a href="/about-us.html" onclick="window.toggleMobileMenu(false)" class="text-white text-xs font-bold uppercase tracking-[0.4em] hover:text-[#c5a059]">About Us</a>
+        <a href="/our-vision.html" onclick="window.toggleMobileMenu(false)" class="text-white text-xs font-bold uppercase tracking-[0.4em] hover:text-[#c5a059]">Our Vision</a>
+        <a href="/what-we-believe.html" onclick="window.toggleMobileMenu(false)" class="text-white text-xs font-bold uppercase tracking-[0.4em] hover:text-[#c5a059]">What We Believe</a>
+        <a href="/ministries.html" onclick="window.toggleMobileMenu(false)" class="text-white text-xs font-bold uppercase tracking-[0.4em] hover:text-[#c5a059]">Ministries</a>
+        <a href="/connect.html" onclick="window.toggleMobileMenu(false)" class="text-white text-xs font-bold uppercase tracking-[0.4em] hover:text-[#c5a059]">Connect</a>
+        
+        <a href="https://app.securegive.com/AFountain/a-fountain-of-life" class="mt-4 border border-[#c5a059] text-[#c5a059] px-10 py-4 text-[10px] font-bold uppercase tracking-[0.3em]">
+            Give Online
+        </a>
+    </div>
+</div>
+
+<script>
+    window.toggleMobileMenu = function(open) {
+        const menu = document.getElementById('mobile-menu');
+        const body = document.body;
+        
+        if (open) {
+            menu.classList.remove('hidden');
+            body.style.overflow = 'hidden'; 
+        } else {
+            menu.classList.add('hidden');
+            body.style.overflow = 'auto';
+        }
+    };
+</script>
