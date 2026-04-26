@@ -209,4 +209,38 @@
     </script>
 
 </body>
+
+<script>
+    async function loadComponent(id, file) {
+        try {
+            const element = document.getElementById(id);
+            const response = await fetch(file);
+            if (response.ok) {
+                const html = await response.text();
+                element.innerHTML = html;
+
+                // THIS IS THE MISSING PIECE:
+                // Manually find and execute scripts within the loaded component
+                const scripts = element.querySelectorAll("script");
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement("script");
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                    } else {
+                        newScript.text = oldScript.text;
+                    }
+                    document.head.appendChild(newScript).parentNode.removeChild(newScript);
+                });
+            }
+        } catch (error) { 
+            console.error(`Error loading ${file}:`, error); 
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        loadComponent('header-placeholder', './components/header.html');
+        loadComponent('footer-placeholder', './components/footer.html');
+    });
+</script>
+
 </html>
