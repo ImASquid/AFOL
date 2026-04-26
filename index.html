@@ -13,157 +13,40 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     
     <style>
-        :root {
-            --primary: #1a1c1e;
-            --accent: #c5a059;
-            --cream: #f9f7f2;
-        }
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            background-color: var(--cream); 
-            scroll-behavior: smooth; 
-            margin: 0;
-        }
+        :root { --primary: #1a1c1e; --accent: #c5a059; --cream: #f9f7f2; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--cream); margin: 0; overflow-x: hidden; }
         h1, h2, h3, h4, .serif { font-family: 'Cormorant Garamond', serif; }
-        
-        /* Hero Styling */
-        .hero-overlay {
-            background: linear-gradient(to right, rgba(26, 28, 30, 0.9) 30%, rgba(26, 28, 30, 0.2) 100%);
-        }
-        .btn-gold {
-            background-color: var(--accent);
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .btn-gold:hover {
-            background-color: #b08d48;
-            transform: translateY(-2px);
-        }
-        .section-line {
-            width: 60px;
-            height: 2px;
-            background-color: var(--accent);
-            margin: 1.5rem 0;
-        }
-
-        /* Header Transparency */
-        #header-placeholder { 
-            position: absolute;
-            top: 0;
-            width: 100%;
-            z-index: 50;
-            background: transparent;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            min-height: 80px;
-        }
-
-        /* Swiper Customization */
-        .swiper-button-next, .swiper-button-prev { color: var(--accent) !important; }
+        .hero-overlay { background: linear-gradient(to right, rgba(26, 28, 30, 0.9) 30%, rgba(26, 28, 30, 0.2) 100%); }
+        .btn-gold { background-color: var(--accent); color: white; transition: all 0.3s ease; }
+        .section-line { width: 60px; height: 2px; background-color: var(--accent); margin: 1.5rem 0; }
+        #header-placeholder { position: absolute; top: 0; width: 100%; z-index: 50; }
+        .fade-in { animation: fadeIn 1.2s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 
     <script>
-        // Component Loader for Header/Footer
         async function loadComponent(id, file) {
             try {
                 const element = document.getElementById(id);
                 const response = await fetch(file);
                 if (response.ok) {
-                    element.innerHTML = await response.text();
+                    const html = await response.text();
+                    element.innerHTML = html;
+                    const scripts = element.querySelectorAll("script");
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement("script");
+                        newScript.text = oldScript.text;
+                        document.head.appendChild(newScript).parentNode.removeChild(newScript);
+                    });
                 }
-            } catch (error) {
-                console.error(`Error loading ${file}:`, error);
-            }
-        }
-
-        // Dynamic Announcements Logic
-        async function setupAnnouncements() {
-        const repoOwner = "ImASquid"; 
-        const repoName = "AFOL-Asset"; 
-        const folderPath = ""; // Root of the repo
-        
-        // Add a timestamp to the URL to bypass GitHub's cache
-        const apiEndpoint = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}?cb=${Date.now()}`;
-
-        try {
-            const response = await fetch(apiEndpoint);
-            const data = await response.json();
-            
-            console.log("GitHub Response:", data);
-
-            if (!Array.isArray(data)) {
-                console.error("API Error: Expected an array but got:", data);
-                return;
-            }
-
-            // Filter for both potential spellings (with and without the 'n')
-            const images = data
-                .filter(file => {
-                    const name = file.name.toLowerCase();
-                    return name.startsWith('announcement_');
-                })
-                .sort((a, b) => {
-                    // Extracts the numbers from the filename to sort numerically
-                    const numA = parseInt(a.name.match(/\d+/) || 0);
-                    const numB = parseInt(b.name.match(/\d+/) || 0);
-                    return numA - numB;
-                });
-
-            if (images.length > 0) {
-                renderAnnouncements(images);
-            } else {
-                console.warn("No matching announcement images found in the repo.");
-                // Optional: hide the section if empty
-                // document.getElementById('events').style.display = 'none';
-            }
-        } catch (error) {
-            console.error("GitHub Fetch Failed:", error);
-        }
-    }
-
-        function renderAnnouncements(images) {
-            const container = document.getElementById('announcement-container');
-            const wrapper = document.getElementById('announcement-wrapper');
-            const count = images.length;
-
-            container.innerHTML = '';
-
-            if (count > 4) {
-                wrapper.classList.add('swiper');
-                container.className = "swiper-wrapper";
-                document.getElementById('swiper-next').classList.remove('hidden');
-                document.getElementById('swiper-prev').classList.remove('hidden');
-            } else {
-                container.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10";
-            }
-
-            images.forEach(img => {
-                const slideClass = count > 4 ? 'swiper-slide' : '';
-                container.innerHTML += `
-                    <div class="${slideClass} group cursor-pointer">
-                        <div class="relative overflow-hidden mb-6 aspect-[3/4] bg-slate-100 shadow-sm">
-                            <img src="${img.download_url}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        </div>
-                        <h3 class="serif text-2xl mb-2 group-hover:text-[#c5a059] transition-colors">
-                            ${img.name.split('.')[0].replace('_', ' ')}
-                        </h3>
-                    </div>
-                `;
-            });
-
-            if (count > 4) {
-                new Swiper('.swiper', {
-                    slidesPerView: 1,
-                    spaceBetween: 30,
-                    navigation: { nextEl: '#swiper-next', prevEl: '#swiper-prev' },
-                    breakpoints: { 640: { slidesPerView: 2 }, 1024: { slidesPerView: 4 } }
-                });
-            }
+            } catch (error) { console.error(`Error loading ${file}:`, error); }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             loadComponent('header-placeholder', './components/header.html');
+            loadComponent('online-viewing-placeholder', './components/online-viewing.html');
+            loadComponent('announcements-placeholder', './components/announcements.html');
             loadComponent('footer-placeholder', './components/footer.html');
-            setupAnnouncements();
         });
     </script>
 </head>
@@ -174,14 +57,13 @@
     <section class="relative h-screen flex items-center overflow-hidden bg-[#1a1c1e]">
         <img src="https://images.unsplash.com/photo-1510590337019-5ef8d3d32116?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Church Background">
         <div class="absolute inset-0 hero-overlay"></div>
-        
-        <div class="relative max-w-7xl mx-auto px-8 w-full text-left">
+        <div class="relative max-w-7xl mx-auto px-8 w-full fade-in">
             <div class="max-w-2xl">
                 <span class="text-[#c5a059] uppercase tracking-[0.3em] text-sm font-bold">Welcome to AFOL</span>
-                <h1 class="text-white text-6xl md:text-8xl mt-4 mb-8 leading-tight">Life. Truth. <br><span class="italic text-slate-300">Discipleship.</span></h1>
+                <h1 class="text-white text-6xl md:text-8xl mt-4 mb-8 leading-tight">Life. Truth. <br><span class="italic text-slate-300">Worship.</span></h1>
                 <div class="flex space-x-6">
-                    <a href="connect.html" class="btn-gold px-10 py-4 font-bold uppercase text-xs tracking-widest shadow-xl">Join Us</a>
-                    <a href="connect.html" class="text-white border-b border-white/30 py-4 hover:border-[#c5a059] transition uppercase text-xs tracking-widest font-bold">Watch Online</a>
+                    <a href="#services" class="btn-gold px-10 py-4 font-bold uppercase text-xs tracking-widest shadow-xl">Join Us</a>
+                    <a href="#online-viewing" class="text-white border-b border-white/30 py-4 hover:border-[#c5a059] transition uppercase text-xs tracking-widest font-bold">Watch Online</a>
                 </div>
             </div>
         </div>
@@ -190,29 +72,28 @@
     <section id="services" class="relative -mt-20 z-10 px-4">
         <div class="max-w-6xl mx-auto bg-white shadow-2xl grid md:grid-cols-3">
             <div class="p-12 border-r border-slate-100 group hover:bg-slate-50 transition">
-                <h4 class="serif text-3xl mb-4">Sundays</h4>
-                <div class="section-line"></div>
+                <h4 class="serif text-3xl mb-4">Sundays</h4><div class="section-line"></div>
                 <p class="text-slate-500 text-sm">9:30 AM & 11:15 AM</p>
             </div>
             <div class="p-12 border-r border-slate-100 group hover:bg-slate-50 transition">
-                <h4 class="serif text-3xl mb-4">Wednesdays</h4>
-                <div class="section-line"></div>
-                <p class="text-slate-500 text-sm">7:30 PM — Bible Study</p>
+                <h4 class="serif text-3xl mb-4">Wednesdays</h4><div class="section-line"></div>
+                <p class="text-slate-500 text-sm">7:30 PM; Bible Study.</p>
             </div>
             <div class="p-12 group hover:bg-slate-50 transition">
-                <h4 class="serif text-3xl mb-4">Youth</h4>
-                <div class="section-line"></div>
-                <p class="text-slate-500 text-sm">Fridays at 6:30 PM</p>
+                <h4 class="serif text-3xl mb-4">Fridays</h4><div class="section-line"></div>
+                <p class="text-slate-500 text-sm">Youth Service at 6:30 PM.</p>
             </div>
         </div>
     </section>
 
-    <section id="pastors" class="py-32 bg-white overflow-hidden">
+    <div id="online-viewing-placeholder"></div>
+
+    <section id="pastors" class="py-32 bg-[#fdfbf7] overflow-hidden">
         <div class="max-w-7xl mx-auto px-8">
             <div class="relative flex flex-col lg:flex-row items-center">
                 <div class="w-full lg:w-3/5 relative">
                     <div class="aspect-[3/2] overflow-hidden shadow-2xl rounded-sm">
-                        <img src="https://afountain.org/wp-content/uploads/2023/07/Fletcher-Family-006-1-1024x681.jpg" class="w-full h-full object-cover object-top scale-110 origin-top transform transition duration-700 hover:scale-105">
+                        <img src="https://afountain.org/wp-content/uploads/2023/07/Fletcher-Family-006-1-1024x681.jpg" class="w-full h-full object-cover object-top transition duration-700 hover:scale-105">
                     </div>
                 </div>
                 <div class="w-full lg:w-1/2 lg:-ml-20 mt-12 lg:mt-0 relative z-10">
@@ -220,7 +101,7 @@
                         <span class="text-[#c5a059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-4">Our Leadership</span>
                         <h2 class="serif text-4xl md:text-5xl mb-6">Pastors Rusty & <br>Lyudmila Fletcher</h2>
                         <div class="section-line"></div>
-                        <p class="text-slate-600 leading-loose mb-6 text-sm">A Fountain of Life Worship Center is led by Pastors Rusty and Lyudmila Fletcher. Their heart is to see people transformed by the power of God's Word.</p>
+                        <p class="text-slate-600 leading-loose mb-6 text-sm">Their heart is to see people transformed by the power of God's Word.</p>
                         <a href="about-us.html" class="text-[#c5a059] font-bold uppercase text-[11px] tracking-widest border-b-2 border-[#c5a059]/20 pb-1 hover:border-[#c5a059] transition-all">Read Our Story</a>
                     </div>
                 </div>
@@ -228,21 +109,7 @@
         </div>
     </section>
 
-    <section id="events" class="py-32 bg-white">
-        <div class="max-w-7xl mx-auto px-8">
-            <div class="text-center mb-20">
-                <span class="text-[#c5a059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-4">Community & Life</span>
-                <h2 class="serif text-5xl">Announcements</h2>
-                <div class="section-line mx-auto"></div>
-            </div>
-
-            <div id="announcement-wrapper" class="relative">
-                <div id="announcement-container"></div>
-                <div id="swiper-next" class="swiper-button-next hidden"></div>
-                <div id="swiper-prev" class="swiper-button-prev hidden"></div>
-            </div>
-        </div>
-    </section>
+    <div id="announcements-placeholder"></div>
 
     <div id="footer-placeholder"></div>
 

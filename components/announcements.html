@@ -1,0 +1,120 @@
+<style>
+    :root {
+        --accent: #c5a059;
+    }
+    /* Swiper Navigation Customization */
+    .swiper-button-next, .swiper-button-prev { 
+        color: var(--accent) !important; 
+        transform: scale(0.6);
+        background: rgba(255,255,255,0.8);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        backdrop-filter: blur(4px);
+    }
+    .swiper-button-next:after, .swiper-button-prev:after {
+        font-size: 20px;
+        font-weight: bold;
+    }
+</style>
+
+<section id="events" class="py-32 bg-white">
+    <div class="max-w-7xl mx-auto px-8">
+        <div class="text-center mb-20">
+            <span class="text-[#c5a059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-4">Community & Life</span>
+            <h2 class="serif text-5xl text-[#1a1c1e]">Announcements</h2>
+            <div class="section-line mx-auto"></div>
+        </div>
+
+        <div id="announcement-wrapper" class="relative">
+            <div id="announcement-container"></div>
+            
+            <div id="swiper-next" class="swiper-button-next hidden"></div>
+            <div id="swiper-prev" class="swiper-button-prev hidden"></div>
+        </div>
+    </div>
+</section>
+
+<script>
+    async function setupAnnouncements() {
+        const repoOwner = "ImASquid"; 
+        const repoName = "AFOL-Asset"; 
+        const apiEndpoint = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/?cb=${Date.now()}`;
+
+        try {
+            const response = await fetch(apiEndpoint);
+            const data = await response.json();
+            
+            if (!Array.isArray(data)) return;
+
+            // Filter for both potential spellings
+            const images = data
+                .filter(file => {
+                    const name = file.name.toLowerCase();
+                    return name.startsWith('annoucement_') || name.startsWith('announcement_');
+                })
+                .sort((a, b) => {
+                    const numA = parseInt(a.name.match(/\d+/) || 0);
+                    const numB = parseInt(b.name.match(/\d+/) || 0);
+                    return numA - numB;
+                });
+
+            if (images.length > 0) renderAnnouncements(images);
+        } catch (error) {
+            console.error("Announcements Sync Failed:", error);
+        }
+    }
+
+    function renderAnnouncements(images) {
+        const container = document.getElementById('announcement-container');
+        const wrapper = document.getElementById('announcement-wrapper');
+        const count = images.length;
+
+        container.innerHTML = '';
+
+        if (count > 4) {
+            wrapper.classList.add('swiper');
+            container.className = "swiper-wrapper";
+            document.getElementById('swiper-next').classList.remove('hidden');
+            document.getElementById('swiper-prev').classList.remove('hidden');
+        } else {
+            container.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10";
+        }
+
+        images.forEach(img => {
+            const slideClass = count > 4 ? 'swiper-slide' : '';
+            container.innerHTML += `
+                <div class="${slideClass} group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-slate-100 shadow-sm border border-slate-100">
+                        <img src="${img.download_url}" 
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                             alt="Announcement Banner">
+                    </div>
+                </div>
+            `;
+        });
+
+        if (count > 4) {
+            new Swiper('#announcement-wrapper', {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true, // WRAP ENABLED
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                navigation: { 
+                    nextEl: '#swiper-next', 
+                    prevEl: '#swiper-prev' 
+                },
+                breakpoints: {
+                    640: { slidesPerView: 2 },
+                    1024: { slidesPerView: 4 }
+                }
+            });
+        }
+    }
+
+    // Trigger logic
+    setupAnnouncements();
+</script>
