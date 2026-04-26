@@ -1,19 +1,3 @@
-<style>
-    #online-viewing .video-shadow {
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    }
-    /* Loading spinner using CSS instead of FA icon */
-    #online-viewing .loading-spinner {
-        width: 20px;
-        height: 20px;
-        border: 2px solid rgba(255,255,255,0.1);
-        border-top: 2px solid rgba(255,255,255,0.5);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-</style>
-
 <section id="online-viewing" class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-8">
         <div class="flex flex-col lg:flex-row items-center gap-16">
@@ -39,9 +23,9 @@
             </div>
 
             <div class="w-full lg:w-1/2">
-                <div class="relative video-shadow rounded-sm overflow-hidden bg-black aspect-video">
+                <div class="relative video-shadow rounded-sm overflow-hidden bg-black">
                     <div id="player" class="w-full h-full">
-                        <div id="loading" class="flex flex-col items-center justify-center h-full text-white/40 uppercase tracking-[0.2em] text-[10px]">
+                        <div id="loading" class="flex flex-col items-center justify-center aspect-video text-white/40 uppercase tracking-[0.2em] text-[10px]">
                             <div class="loading-spinner mb-3"></div>
                             Connecting to Feed...
                         </div>
@@ -60,38 +44,48 @@
 
 <script>
     async function loadLatestVideo() {
-        const playerDiv = document.getElementById("player");
-        const statusText = document.getElementById("stream-status");
-        const ytIcon = document.getElementById("status-yt-icon");
-        
-        try {
-            const res = await fetch(
-                "https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCIkFMjRX75QBa9gKHYxRiCw"
-            );
-            const data = await res.json();
-            
-            if (data.items && data.items.length > 0) {
-                const videoId = data.items[0].guid.split(":").pop();
+    const playerDiv = document.getElementById("player");
+    const statusText = document.getElementById("stream-status");
+    const ytIcon = document.getElementById("status-yt-icon");
+    
+    const txtUrl = `https://raw.githubusercontent.com/ImASquid/AFOL-Asset/refs/heads/main/recent_link.txt?v=${Date.now()}`;
 
-                playerDiv.innerHTML = `
-                    <iframe
-                        src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0"
-                        style="width:100%; height:100%; position:absolute; top:0; left:0; border:0;"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        allowfullscreen>
-                    </iframe>
-                `;
-                
-                // Show local icon and update text
-                statusText.innerHTML = 'Our Most Recent Service';
-                ytIcon.classList.remove('hidden');
-            }
-        } catch (e) {
-            console.error("Video load failed:", e);
-            statusText.innerText = "Unable to load latest service.";
-            playerDiv.innerHTML = `<div class="flex items-center justify-center h-full text-white/30 text-xs px-10 text-center">Please visit our YouTube channel directly for the latest stream.</div>`;
-        }
+    const response = await fetch(txtUrl);
+    let rawContent = (await response.text()).trim();
+
+    // The Cleaner: Extract just the ID regardless of what you paste in the TXT
+    let videoId = rawContent;
+    
+    if (rawContent.includes("v=")) {
+        // Handles: youtube.com/watch?v=ID&anythingelse
+        videoId = rawContent.split("v=")[1].split("&")[0];
+    } else if (rawContent.includes("be/")) {
+        // Handles: youtu.be/ID?anythingelse
+        videoId = rawContent.split("be/")[1].split("?")[0];
+    } else if (rawContent.includes("embed/")) {
+        // Handles: youtube.com/embed/ID
+        videoId = rawContent.split("embed/")[1].split("?")[0];
     }
 
-    loadLatestVideo();
+    // Now we build the perfect embed URL
+    const cleanEmbedUrl = `https://www.youtube.com/embed/${videoId}?rel=0`;
+
+    playerDiv.innerHTML = `
+        <div style="padding-bottom: 56.25%; position: relative;">
+            <iframe 
+                style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; border: 0px;" 
+                width="100%" 
+                height="100%" 
+                src="${cleanEmbedUrl}" 
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
+                title="Media Embed">
+            </iframe>
+        </div>
+    `;
+    
+    statusText.innerHTML = 'Our Most Recent Service';
+    ytIcon.classList.remove('hidden');
+}
+
+loadLatestVideo();
 </script>
