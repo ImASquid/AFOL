@@ -5,19 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Fountain of Life | Kyle, TX</title>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     
     <style>
         :root {
             --primary: #1a1c1e;
             --accent: #c5a059;
             --cream: #f9f7f2;
-            --warm-bg: #f4f1ea;
         }
         body { 
             font-family: 'Montserrat', sans-serif; 
@@ -58,33 +57,113 @@
             min-height: 80px;
         }
 
-        /* Image Zoom Utilities */
-        .zoom-img {
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .group:hover .zoom-img {
-            transform: scale(1.05);
-        }
+        /* Swiper Customization */
+        .swiper-button-next, .swiper-button-prev { color: var(--accent) !important; }
     </style>
 
     <script>
+        // Component Loader for Header/Footer
         async function loadComponent(id, file) {
             try {
                 const element = document.getElementById(id);
                 const response = await fetch(file);
                 if (response.ok) {
                     element.innerHTML = await response.text();
-                } else {
-                    console.error(`Error loading ${file}: ${response.statusText}`);
                 }
             } catch (error) {
-                console.error(`Fetch error for ${file}:`, error);
+                console.error(`Error loading ${file}:`, error);
+            }
+        }
+
+        // Dynamic Announcements Logic
+        async function setupAnnouncements() {
+        const repoOwner = "ImASquid"; 
+        const repoName = "AFOL-Asset"; 
+        const folderPath = ""; // Root of the repo
+        
+        // Add a timestamp to the URL to bypass GitHub's cache
+        const apiEndpoint = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}?cb=${Date.now()}`;
+
+        try {
+            const response = await fetch(apiEndpoint);
+            const data = await response.json();
+            
+            console.log("GitHub Response:", data);
+
+            if (!Array.isArray(data)) {
+                console.error("API Error: Expected an array but got:", data);
+                return;
+            }
+
+            // Filter for both potential spellings (with and without the 'n')
+            const images = data
+                .filter(file => {
+                    const name = file.name.toLowerCase();
+                    return name.startsWith('announcement_');
+                })
+                .sort((a, b) => {
+                    // Extracts the numbers from the filename to sort numerically
+                    const numA = parseInt(a.name.match(/\d+/) || 0);
+                    const numB = parseInt(b.name.match(/\d+/) || 0);
+                    return numA - numB;
+                });
+
+            if (images.length > 0) {
+                renderAnnouncements(images);
+            } else {
+                console.warn("No matching announcement images found in the repo.");
+                // Optional: hide the section if empty
+                // document.getElementById('events').style.display = 'none';
+            }
+        } catch (error) {
+            console.error("GitHub Fetch Failed:", error);
+        }
+    }
+
+        function renderAnnouncements(images) {
+            const container = document.getElementById('announcement-container');
+            const wrapper = document.getElementById('announcement-wrapper');
+            const count = images.length;
+
+            container.innerHTML = '';
+
+            if (count > 4) {
+                wrapper.classList.add('swiper');
+                container.className = "swiper-wrapper";
+                document.getElementById('swiper-next').classList.remove('hidden');
+                document.getElementById('swiper-prev').classList.remove('hidden');
+            } else {
+                container.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10";
+            }
+
+            images.forEach(img => {
+                const slideClass = count > 4 ? 'swiper-slide' : '';
+                container.innerHTML += `
+                    <div class="${slideClass} group cursor-pointer">
+                        <div class="relative overflow-hidden mb-6 aspect-[3/4] bg-slate-100 shadow-sm">
+                            <img src="${img.download_url}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        </div>
+                        <h3 class="serif text-2xl mb-2 group-hover:text-[#c5a059] transition-colors">
+                            ${img.name.split('.')[0].replace('_', ' ')}
+                        </h3>
+                    </div>
+                `;
+            });
+
+            if (count > 4) {
+                new Swiper('.swiper', {
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    navigation: { nextEl: '#swiper-next', prevEl: '#swiper-prev' },
+                    breakpoints: { 640: { slidesPerView: 2 }, 1024: { slidesPerView: 4 } }
+                });
             }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             loadComponent('header-placeholder', './components/header.html');
             loadComponent('footer-placeholder', './components/footer.html');
+            setupAnnouncements();
         });
     </script>
 </head>
@@ -100,11 +179,8 @@
             <div class="max-w-2xl">
                 <span class="text-[#c5a059] uppercase tracking-[0.3em] text-sm font-bold">Welcome to AFOL</span>
                 <h1 class="text-white text-6xl md:text-8xl mt-4 mb-8 leading-tight">Life. Truth. <br><span class="italic text-slate-300">Discipleship.</span></h1>
-                <p class="text-white/70 text-lg mb-10 font-light leading-relaxed max-w-lg">
-                    Join us in Kyle, Texas as we share the life-giving message of Jesus Christ through teaching and worship.
-                </p>
                 <div class="flex space-x-6">
-                    <a href="connect.html" class="btn-gold px-10 py-4 font-bold uppercase text-xs tracking-widest shadow-xl transition-all">Join Us</a>
+                    <a href="connect.html" class="btn-gold px-10 py-4 font-bold uppercase text-xs tracking-widest shadow-xl">Join Us</a>
                     <a href="connect.html" class="text-white border-b border-white/30 py-4 hover:border-[#c5a059] transition uppercase text-xs tracking-widest font-bold">Watch Online</a>
                 </div>
             </div>
@@ -113,29 +189,20 @@
 
     <section id="services" class="relative -mt-20 z-10 px-4">
         <div class="max-w-6xl mx-auto bg-white shadow-2xl grid md:grid-cols-3">
-            <div class="p-12 border-b md:border-b-0 md:border-r border-slate-100 group hover:bg-slate-50 transition">
-                <h4 class="serif text-3xl mb-4 text-[#1a1c1e]">Sundays</h4>
+            <div class="p-12 border-r border-slate-100 group hover:bg-slate-50 transition">
+                <h4 class="serif text-3xl mb-4">Sundays</h4>
                 <div class="section-line"></div>
-                <p class="text-slate-500 text-sm leading-relaxed">
-                    9:30 AM — Early Service<br>
-                    11:15 AM — Morning Worship
-                </p>
+                <p class="text-slate-500 text-sm">9:30 AM & 11:15 AM</p>
             </div>
-            <div class="p-12 border-b md:border-b-0 md:border-r border-slate-100 group hover:bg-slate-50 transition">
-                <h4 class="serif text-3xl mb-4 text-[#1a1c1e]">Wednesdays</h4>
+            <div class="p-12 border-r border-slate-100 group hover:bg-slate-50 transition">
+                <h4 class="serif text-3xl mb-4">Wednesdays</h4>
                 <div class="section-line"></div>
-                <p class="text-slate-500 text-sm leading-relaxed">
-                    7:30 PM — Midweek Bible Study<br>
-                    Deep diving into the Word.
-                </p>
+                <p class="text-slate-500 text-sm">7:30 PM — Bible Study</p>
             </div>
             <div class="p-12 group hover:bg-slate-50 transition">
-                <h4 class="serif text-3xl mb-4 text-[#1a1c1e]">Youth</h4>
+                <h4 class="serif text-3xl mb-4">Youth</h4>
                 <div class="section-line"></div>
-                <p class="text-slate-500 text-sm leading-relaxed">
-                    Fridays at 6:30 PM<br>
-                    Ages 12-18 | Food & Fellowship
-                </p>
+                <p class="text-slate-500 text-sm">Fridays at 6:30 PM</p>
             </div>
         </div>
     </section>
@@ -143,43 +210,18 @@
     <section id="pastors" class="py-32 bg-white overflow-hidden">
         <div class="max-w-7xl mx-auto px-8">
             <div class="relative flex flex-col lg:flex-row items-center">
-                
-                <div class="w-full lg:w-3/5 relative z-0">
-                    <div class="aspect-[3/2] overflow-hidden shadow-2xl rounded-sm border-[1px] border-slate-100">
-                        <img 
-                            src="https://afountain.org/wp-content/uploads/2023/07/Fletcher-Family-006-1-1024x681.jpg" 
-                            alt="Pastors Rusty and Lyudmila Fletcher" 
-                            class="w-full h-full object-cover object-top scale-110 origin-top transform transition duration-700 hover:scale-105"
-                        >
+                <div class="w-full lg:w-3/5 relative">
+                    <div class="aspect-[3/2] overflow-hidden shadow-2xl rounded-sm">
+                        <img src="https://afountain.org/wp-content/uploads/2023/07/Fletcher-Family-006-1-1024x681.jpg" class="w-full h-full object-cover object-top scale-110 origin-top transform transition duration-700 hover:scale-105">
                     </div>
-                    <div class="absolute -top-6 -left-6 w-24 h-24 border-t-2 border-l-2 border-[#c5a059] opacity-40 hidden lg:block"></div>
                 </div>
-
                 <div class="w-full lg:w-1/2 lg:-ml-20 mt-12 lg:mt-0 relative z-10">
                     <div class="bg-white p-10 md:p-16 shadow-2xl border-t-4 border-[#c5a059]">
                         <span class="text-[#c5a059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-4">Our Leadership</span>
-                        <h2 class="serif text-4xl md:text-5xl text-[#1a1c1e] mb-6 leading-tight">
-                            Pastors Rusty & <br>Lyudmila Fletcher
-                        </h2>
+                        <h2 class="serif text-4xl md:text-5xl mb-6">Pastors Rusty & <br>Lyudmila Fletcher</h2>
                         <div class="section-line"></div>
-                        
-                        <div class="space-y-6 text-slate-600 leading-loose text-sm md:text-base">
-                            <p>
-                                A Fountain of Life Worship Center is led by Pastors Rusty and Lyudmila Fletcher. Their heart is to see people transformed by the power of God's Word and to build a church dedicated to authentic discipleship.
-                            </p>
-                            <p class="italic serif text-xl text-slate-800">
-                                "Our vision is to reach our community with the life-giving message of Jesus."
-                            </p>
-                            <p>
-                                Based in Kyle, Texas, they have cultivated a community where every person is encouraged to grow in their faith and experience the living water of Christ.
-                            </p>
-                        </div>
-
-                        <div class="mt-10">
-                            <a href="about-us.html" class="inline-block text-[#c5a059] font-bold uppercase text-[11px] tracking-[0.2em] border-b-2 border-[#c5a059]/20 pb-1 hover:border-[#c5a059] transition-all">
-                                Read Our Story <i class="fas fa-chevron-right ml-2 text-[8px]"></i>
-                            </a>
-                        </div>
+                        <p class="text-slate-600 leading-loose mb-6 text-sm">A Fountain of Life Worship Center is led by Pastors Rusty and Lyudmila Fletcher. Their heart is to see people transformed by the power of God's Word.</p>
+                        <a href="about-us.html" class="text-[#c5a059] font-bold uppercase text-[11px] tracking-widest border-b-2 border-[#c5a059]/20 pb-1 hover:border-[#c5a059] transition-all">Read Our Story</a>
                     </div>
                 </div>
             </div>
@@ -187,128 +229,20 @@
     </section>
 
     <section id="events" class="py-32 bg-white">
-    <div class="max-w-7xl mx-auto px-8">
-        <div class="text-center mb-20">
-            <span class="text-[#c5a059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-4">Community & Life</span>
-            <h2 class="serif text-5xl text-[#1a1c1e]">Announcements</h2>
-            <div class="section-line mx-auto"></div>
-        </div>
-
-        <div id="announcement-wrapper" class="relative">
-            <div id="announcement-container"></div>
-            <div class="swiper-button-next !text-[#c5a059] hidden"></div>
-            <div class="swiper-button-prev !text-[#c5a059] hidden"></div>
-        </div>
-    </div>
-</section>
-
-<script>
-async function setupAnnouncements() {
-    const repoOwner = "ImASquid";
-    const repoName = "AFOL";
-    const folderPath = "assets/announcements";
-    const apiEndpoint = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}`;
-
-    try {
-        const response = await fetch(apiEndpoint);
-        const files = await response.json();
-        
-        // Filter and sort images Announcement_1, 2, 3...
-        const images = files
-            .filter(file => file.name.startsWith('Announcement_'))
-            .sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}));
-
-        renderAnnouncements(images);
-    } catch (error) {
-        console.error("Error pulling from GitHub:", error);
-    }
-}
-
-async function setupAnnouncements() {
-    const repoOwner = "ImASquid"; 
-    const repoName = "AFOL";
-    const folderPath = "announcements"; // Ensure this folder exists in your repo
-    
-    // Using a cache-busting timestamp helps prevent stale API data
-    const apiEndpoint = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}?t=${new Date().getTime()}`;
-
-    try {
-        const response = await fetch(apiEndpoint);
-        const data = await response.json();
-        
-        // CHECK: If GitHub returns an error object (like 'message: Not Found') instead of an array
-        if (!Array.isArray(data)) {
-            console.error("GitHub API Error:", data.message);
-            return;
-        }
-
-        // Filter for your specific naming convention
-        const images = data
-            .filter(file => file.name.toLowerCase().startsWith('announcement_'))
-            .sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}));
-
-        if (images.length > 0) {
-            renderAnnouncements(images);
-        } else {
-            console.warn("No images found matching 'Announcement_i.png'");
-        }
-
-    } catch (error) {
-        console.error("Fetch failed. You might be offline or rate-limited:", error);
-    }
-}
-
-function renderAnnouncements(images) {
-    const container = document.getElementById('announcement-container');
-    const wrapper = document.getElementById('announcement-wrapper');
-    const count = images.length;
-
-    // Clear placeholder
-    container.innerHTML = '';
-
-    // If more than 4, we need the Swiper 'wrapper' class
-    if (count > 4) {
-        wrapper.classList.add('swiper');
-        container.className = "swiper-wrapper";
-        document.querySelector('.swiper-button-next').classList.remove('hidden');
-        document.querySelector('.swiper-button-prev').classList.remove('hidden');
-    } else {
-        container.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10";
-    }
-
-    images.forEach(img => {
-        const slideClass = count > 4 ? 'swiper-slide' : '';
-        // Note: download_url is provided by GitHub API for raw image access
-        container.innerHTML += `
-            <div class="${slideClass} group cursor-pointer">
-                <div class="relative overflow-hidden mb-6 aspect-[3/4] bg-slate-100 shadow-sm">
-                    <img src="${img.download_url}" 
-                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                         onerror="this.src='https://via.placeholder.com/300x400?text=Image+Missing'">
-                </div>
-                <h3 class="serif text-2xl mb-2 group-hover:text-[#c5a059] transition-colors">${img.name.split('.')[0].replace('_', ' ')}</h3>
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="text-center mb-20">
+                <span class="text-[#c5a059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-4">Community & Life</span>
+                <h2 class="serif text-5xl">Announcements</h2>
+                <div class="section-line mx-auto"></div>
             </div>
-        `;
-    });
 
-    if (count > 4) {
-        new Swiper('.swiper', {
-            slidesPerView: 1,
-            spaceBetween: 30,
-            navigation: { 
-                nextEl: '.swiper-button-next', 
-                prevEl: '.swiper-button-prev' 
-            },
-            breakpoints: {
-                640: { slidesPerView: 2 },
-                1024: { slidesPerView: 4 }
-            }
-        });
-    }
-}
-
-setupAnnouncements();
-</script>
+            <div id="announcement-wrapper" class="relative">
+                <div id="announcement-container"></div>
+                <div id="swiper-next" class="swiper-button-next hidden"></div>
+                <div id="swiper-prev" class="swiper-button-prev hidden"></div>
+            </div>
+        </div>
+    </section>
 
     <div id="footer-placeholder"></div>
 
