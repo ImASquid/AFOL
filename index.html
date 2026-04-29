@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Fountain of Life | Kyle, TX</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     
     <script src="/js/tailwind.js"></script>
     <link href="/css/font-awesome.min.css" rel="stylesheet">
@@ -31,28 +32,43 @@
             try {
                 const element = document.getElementById(id);
                 const response = await fetch(file);
-                if (response.ok) {
-                    const html = await response.text();
-                    element.innerHTML = html;
-                    const scripts = element.querySelectorAll("script");
-                    scripts.forEach(oldScript => {
-                        const newScript = document.createElement("script");
-                        newScript.text = oldScript.text;
-                        document.head.appendChild(newScript).parentNode.removeChild(newScript);
-                    });
-                }
-            } catch (error) { console.error(`Error loading ${file}:`, error); }
+                if (!response.ok) return;
+
+                const html = await response.text();
+                element.innerHTML = html;
+
+                // Execute scripts safely
+                const scripts = element.querySelectorAll("script");
+                for (const oldScript of scripts) {
+                    const newScript = document.createElement("script");
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                    } else {
+                         newScript.textContent = oldScript.textContent;
+                    }
+                    // Appending to body is often less taxing than head for dynamic injections
+                    document.body.appendChild(newScript);
+                    oldScript.remove(); // Clean up the original to save memory
+                 }
+            } catch (error) {
+                console.error(`Error loading ${file}:`, error);
+            }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            // Core UI Components
-            loadComponent('header-placeholder', './components/header.html');
-            loadComponent('footer-placeholder', './components/footer.html');
+        // Sequential Loading to save low-end device CPUs
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Priority 1: Navigation
+            await loadComponent('header-placeholder', './components/header.html');
             
-            // Dynamic Sections
-            loadComponent('online-viewing-placeholder', './components/online-viewing.html');
-            loadComponent('photo-carousel-placeholder', './components/photo-carousel.html');
-            loadComponent('announcements-placeholder', './components/announcements.html');
+            // Priority 2: Video (The heaviest part)
+            await loadComponent('online-viewing-placeholder', './components/online-viewing.html');
+            
+            // Priority 3: Everything else
+            await Promise.all([
+                loadComponent('photo-carousel-placeholder', './components/photo-carousel.html'),
+                loadComponent('announcements-placeholder', './components/announcements.html'),
+                loadComponent('footer-placeholder', './components/footer.html')
+            ]);
         });
     </script>
 </head>
@@ -99,7 +115,7 @@
             <div class="relative flex flex-col lg:flex-row items-center">
                 <div class="w-full lg:w-3/5 relative">
                     <div class="aspect-[3/2] overflow-hidden shadow-2xl rounded-sm">
-                        <img src="https://afountain.org/wp-content/uploads/2023/07/Fletcher-Family-006-1-1024x681.jpg" class="w-full h-full object-cover object-top transition duration-700 hover:scale-105" alt="Pastors Fletcher">
+                        <img src="images/Fletcher-Family-006-1-1024x681.jpg" class="w-full h-full object-cover object-top transition duration-700 hover:scale-105" alt="Pastors Fletcher">
                     </div>
                 </div>
                 <div class="w-full lg:w-1/2 lg:-ml-20 mt-12 lg:mt-0 relative z-10">
