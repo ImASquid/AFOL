@@ -24,68 +24,24 @@
 
             <div class="w-full lg:w-1/2">
                 <div class="relative video-shadow rounded-sm overflow-hidden bg-black">
-                    <div id="player" class="w-full h-full">
-                        <div id="loading" class="flex flex-col items-center justify-center aspect-video text-white/40 uppercase tracking-[0.2em] text-[10px]">
-                            <div class="loading-spinner mb-3"></div>
-                            Connecting to Feed...
-                        </div>
+                    <div style="padding-bottom: 56.25%; position: relative;">
+                        <iframe 
+                            style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; border: 0px;" 
+                            width="100%" 
+                            height="100%" 
+                            src="https://www.youtube.com/embed/zk6Gx-KztU4?mute=1&playsinline=1" 
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
+                            title="Media Embed">
+                        </iframe>
                     </div>
                 </div>
-                <div id="stream-status-container" class="mt-4 flex items-center justify-center lg:justify-start gap-2">
-                    <img id="status-yt-icon" src="/images/youtube.png" class="w-4 h-4 hidden" alt="">
-                    <p id="stream-status" class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
-                        Initializing Stream...
+                <div class="mt-4 flex items-center justify-center lg:justify-start gap-2">
+                    <img src="/images/youtube.png" class="w-4 h-4" alt="">
+                    <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
+                        See One of Our Services
                     </p>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-<script>
-    async function loadLatestVideo() {
-    const playerDiv = document.getElementById("player");
-    const statusText = document.getElementById("stream-status");
-    const ytIcon = document.getElementById("status-yt-icon");
-    
-    const txtUrl = `https://raw.githubusercontent.com/ImASquid/AFOL-Asset/refs/heads/main/recent_link.txt?v=${Date.now()}`;
-
-    const response = await fetch(txtUrl);
-    let rawContent = (await response.text()).trim();
-
-    // The Cleaner: Extract just the ID regardless of what you paste in the TXT
-    let videoId = rawContent;
-    
-    if (rawContent.includes("v=")) {
-        // Handles: youtube.com/watch?v=ID&anythingelse
-        videoId = rawContent.split("v=")[1].split("&")[0];
-    } else if (rawContent.includes("be/")) {
-        // Handles: youtu.be/ID?anythingelse
-        videoId = rawContent.split("be/")[1].split("?")[0];
-    } else if (rawContent.includes("embed/")) {
-        // Handles: youtube.com/embed/ID
-        videoId = rawContent.split("embed/")[1].split("?")[0];
-    }
-
-    // Now we build the perfect embed URL
-    const cleanEmbedUrl = `https://www.youtube.com/embed/${videoId}?rel=0`;
-
-    playerDiv.innerHTML = `
-        <div style="padding-bottom: 56.25%; position: relative;">
-            <iframe 
-                style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; border: 0px;" 
-                width="100%" 
-                height="100%" 
-                src="${cleanEmbedUrl}" 
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
-                title="Media Embed">
-            </iframe>
-        </div>
-    `;
-    
-    statusText.innerHTML = 'Our Most Recent Service';
-    ytIcon.classList.remove('hidden');
-}
-
-loadLatestVideo();
-</script>
