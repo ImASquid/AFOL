@@ -2,9 +2,11 @@
     :root {
         --accent: #c5a059;
     }
+
     /* Swiper Navigation Customization */
-    .swiper-button-next, .swiper-button-prev { 
-        color: var(--accent) !important; 
+    .swiper-button-next,
+    .swiper-button-prev {
+        color: var(--accent) !important;
         transform: scale(0.6);
         background: rgba(255,255,255,0.8);
         width: 50px;
@@ -12,10 +14,13 @@
         border-radius: 50%;
         backdrop-filter: blur(4px);
     }
-    .swiper-button-next:after, .swiper-button-prev:after {
+
+    .swiper-button-next:after,
+    .swiper-button-prev:after {
         font-size: 20px;
         font-weight: bold;
     }
+
     .swiper-wrapper {
         display: flex;
     }
@@ -23,117 +28,206 @@
 
 <section id="events" class="py-32 bg-white">
     <div class="max-w-7xl mx-auto px-8">
+
         <div class="text-center mb-20">
-            <span class="text-[#c5a059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-4">Community & Life</span>
-            <h2 class="serif text-5xl text-[#1a1c1e]">Announcements</h2>
+            <span class="text-[#c5a059] uppercase tracking-[0.4em] text-[10px] font-bold block mb-4">
+                Community & Life
+            </span>
+
+            <h2 class="serif text-5xl text-[#1a1c1e]">
+                Announcements
+            </h2>
+
             <div class="w-12 h-[2px] bg-[#c5a059] mx-auto mt-6"></div>
         </div>
 
         <div id="announcement-wrapper" class="relative">
+
             <div id="announcement-container">
                 <div class="flex justify-center py-20">
                     <div class="w-8 h-8 border-2 border-[#c5a059] border-t-transparent rounded-full animate-spin"></div>
                 </div>
             </div>
-            
+
             <div id="swiper-next" class="swiper-button-next hidden"></div>
             <div id="swiper-prev" class="swiper-button-prev hidden"></div>
+
         </div>
     </div>
 </section>
 
 <script>
-    async function setupAnnouncements() {
-        // 1. Hit the API to see exactly what files exist right now
-        const apiEndpoint = `https://api.github.com/repos/ImASquid/AFOL-Asset/contents/?cb=${Date.now()}`;
+async function setupAnnouncements() {
 
-        try {
-            const response = await fetch(apiEndpoint);
-            const data = await response.json();
-            
-            if (!Array.isArray(data)) return;
+    // Hit GitHub API to see what files currently exist
+    const apiEndpoint =
+        `https://api.github.com/repos/ImASquid/AFOL-Asset/contents/?cb=${Date.now()}`;
 
-            // 2. Filter for spelling variations and map to your specific Raw URL
-            const images = data
-                .filter(file => {
-                    const name = file.name.toLowerCase();
-                    return name.startsWith('annoucement_') || name.startsWith('announcement_');
-                })
-                .sort((a, b) => {
-                    // Sort by the number in the filename
-                    const numA = parseInt(a.name.match(/\d+/) || 0);
-                    const numB = parseInt(b.name.match(/\d+/) || 0);
-                    return numA - numB;
-                })
-                .map(file => {
-                    // Map the filename to your specific raw link with a cache-buster
-                    return `https://raw.githubusercontent.com/ImASquid/AFOL-Asset/refs/heads/main/${file.name}?v=${Date.now()}`;
-                });
+    try {
 
-            if (images.length > 0) {
-                renderAnnouncements(images);
-            } else {
-                document.getElementById('announcement-container').innerHTML = 
-                    `<p class="text-center text-slate-400 italic">No current announcements.</p>`;
-            }
-        } catch (error) {
-            console.error("Announcements Sync Failed:", error);
-        }
-    }
+        const response = await fetch(apiEndpoint);
+        const data = await response.json();
 
-    function renderAnnouncements(urls) {
-        const container = document.getElementById('announcement-container');
-        const wrapper = document.getElementById('announcement-wrapper');
-        const count = urls.length;
+        if (!Array.isArray(data)) return;
 
-        container.innerHTML = '';
+        // Find announcement files
+        const images = data
+            .filter(file => {
+                const name = file.name.toLowerCase();
 
-        // UI Logic: If more than 4 items, enable Swiper slider
-        if (count > 4) {
-            wrapper.classList.add('swiper');
-            container.className = "swiper-wrapper";
-            document.getElementById('swiper-next').classList.remove('hidden');
-            document.getElementById('swiper-prev').classList.remove('hidden');
-        } else {
-            container.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10";
-        }
+                return (
+                    name.startsWith('annoucement_') ||
+                    name.startsWith('announcement_')
+                );
+            })
 
-        urls.forEach(url => {
-            const slideClass = count > 4 ? 'swiper-slide' : '';
-            container.innerHTML += `
-                <div class="${slideClass} group cursor-pointer">
-                    <div class="relative overflow-hidden aspect-[3/4] bg-slate-100 shadow-sm border border-slate-100">
-                        <img src="${url}" 
-                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                             alt="Announcement Banner"
-                             onerror="this.src='https://via.placeholder.com/600x800?text=Image+Not+Found'">
-                    </div>
-                </div>
-            `;
-        });
+            .sort((a, b) => {
 
-        // Initialize Swiper if we have enough items
-        if (count > 4) {
-            new Swiper('#announcement-wrapper', {
-                slidesPerView: 1,
-                spaceBetween: 30,
-                loop: true,
-                autoplay: {
-                    delay: 5000,
-                    disableOnInteraction: false,
-                },
-                navigation: { 
-                    nextEl: '#swiper-next', 
-                    prevEl: '#swiper-prev' 
-                },
-                breakpoints: {
-                    640: { slidesPerView: 2 },
-                    1024: { slidesPerView: 4 }
-                }
+                // Sort by number in filename
+                const numA = parseInt(a.name.match(/\d+/) || 0);
+                const numB = parseInt(b.name.match(/\d+/) || 0);
+
+                return numA - numB;
+            })
+
+            .map(file => {
+
+                // Convert to raw GitHub URL
+                return `https://raw.githubusercontent.com/ImASquid/AFOL-Asset/refs/heads/main/${file.name}?v=${Date.now()}`;
             });
+
+        if (images.length > 0) {
+
+            renderAnnouncements(images);
+
+        } else {
+
+            document.getElementById('announcement-container').innerHTML = `
+                <p class="text-center text-slate-400 italic">
+                    No current announcements.
+                </p>
+            `;
+        }
+
+    } catch (error) {
+
+        console.error("Announcements Sync Failed:", error);
+
+    }
+}
+
+function renderAnnouncements(urls) {
+
+    const container = document.getElementById('announcement-container');
+    const wrapper = document.getElementById('announcement-wrapper');
+
+    const count = urls.length;
+
+    container.innerHTML = '';
+
+    // Swiper mode for 5+ images
+    if (count > 4) {
+
+        wrapper.classList.add('swiper');
+
+        container.className = "swiper-wrapper";
+
+        document
+            .getElementById('swiper-next')
+            .classList.remove('hidden');
+
+        document
+            .getElementById('swiper-prev')
+            .classList.remove('hidden');
+
+    } else {
+
+        // Dynamic layouts for 1–4 images
+        if (count === 1) {
+
+            container.className =
+                "grid grid-cols-1 max-w-xl mx-auto";
+
+        } else if (count === 2) {
+
+            container.className =
+                "grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto";
+
+        } else if (count === 3) {
+
+            container.className =
+                "grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto";
+
+        } else {
+
+            container.className =
+                "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10";
         }
     }
 
-    // Run on load
-    setupAnnouncements();
+    // Render announcement cards
+    urls.forEach(url => {
+
+        const slideClass = count > 4
+            ? 'swiper-slide'
+            : '';
+
+        container.innerHTML += `
+            <div class="${slideClass} group cursor-pointer">
+                
+                <div class="relative overflow-hidden aspect-[3/4] bg-slate-100 shadow-sm border border-slate-100 w-full">
+
+                    <img
+                        src="${url}"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        alt="Announcement Banner"
+
+                        onerror="
+                            this.src='https://via.placeholder.com/600x800?text=Image+Not+Found'
+                        "
+                    >
+
+                </div>
+
+            </div>
+        `;
+    });
+
+    // Initialize Swiper if needed
+    if (count > 4) {
+
+        new Swiper('#announcement-wrapper', {
+
+            slidesPerView: 1,
+
+            spaceBetween: 30,
+
+            loop: true,
+
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+
+            navigation: {
+                nextEl: '#swiper-next',
+                prevEl: '#swiper-prev'
+            },
+
+            breakpoints: {
+
+                640: {
+                    slidesPerView: 2
+                },
+
+                1024: {
+                    slidesPerView: 4
+                }
+            }
+        });
+    }
+}
+
+// Run on page load
+setupAnnouncements();
 </script>
