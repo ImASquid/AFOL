@@ -10,6 +10,7 @@
     <link href="/css/font-awesome.min.css" rel="stylesheet">
     <link href="/css/css2.css" rel="stylesheet">
     
+    <!-- Fredoka handles the rounded playful typography; Montserrat guides clean labels -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -96,30 +97,93 @@
         window.addEventListener('DOMContentLoaded', async () => {
             await loadComponent('header-placeholder', './components/header.html');
             await loadComponent('footer-placeholder', './components/footer.html');
+            
+            // Seamless Formspree AJAX Intercept Logic
+            const form = document.getElementById('vbsForm');
+            const container = document.getElementById('formContainer');
+            
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    submitBtn.disabled = true;
+                    submitBtn.innerText = "Saving Information...";
+                    
+                    const data = new FormData(form);
+                    
+                    try {
+                        const response = await fetch(form.action, {
+                            method: form.method,
+                            body: data,
+                            headers: { 'Accept': 'application/json' }
+                        });
+                        
+                        if (response.ok) {
+                            // Seamless dynamic transition to thank you screen and payment pointer
+                            container.innerHTML = `
+                                <div class="text-center py-8 px-4 space-y-6 animate-fade-in">
+                                    <h2 class="vbs-accent-font text-3xl text-sky-700 uppercase tracking-wide">
+                                        Thank You!
+                                    </h2>
+                                    <p class="text-slate-700 text-sm font-medium leading-relaxed max-w-md mx-auto">
+                                        Your child's registration details have been successfully saved for Living Water VBS 2026. We are so excited to have them join us!
+                                    </p>
+                                    <div class="w-12 h-1 bg-sky-200 mx-auto rounded-full my-4"></div>
+                                    <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-5 text-left space-y-3">
+                                        <p class="text-xs font-bold text-amber-800 uppercase tracking-wider flex items-center gap-2">
+                                            NOTICE:
+                                        </p>
+                                        <p class="text-xs text-slate-700 leading-relaxed font-medium">
+                                            To complete validation and lock in your child's placement, please ensure the <strong>$10 registration fee</strong> is submitted online. 
+                                        </p>
+                                        <p class="text-xs text-slate-700 leading-relaxed font-medium">
+                                            You can use the payment panel on the right side of your screen to navigate to the church portal, making sure to choose or note <strong>"VBS"</strong> during your confirmation. You may also pay in person at the church: 302 Millennium Drive Kyle, Texas 78640.
+                                        </p>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            throw new Error('Server side parsing error.');
+                        }
+                    } catch (error) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = "Complete Registration";
+                        alert("Oops! There was a problem submitting your registration. Please try again or contact support.");
+                    }
+                });
+            }
         });
     </script>
 </head>
 <body class="text-slate-900 flex flex-col min-h-screen">
 
+    <!-- Global Header Component -->
     <div id="header-placeholder"></div>
 
+    <!-- Solid Navigation Spacing Carrier Block -->
     <section class="relative bg-[#1a1c1e] pt-32 pb-4 text-center border-b-4 border-[#c5a059] z-10">
     </section>
 
+    <!-- Main Dynamic Interface Layout Zone -->
     <div class="vbs-canvas-bg flex-grow w-full py-16 px-4 md:px-6">
         
+        <!-- Whimsical Title Banner Section -->
         <div class="max-w-7xl mx-auto text-center mb-12 tracking-wide">
             <h1 class="text-5xl md:text-7xl vbs-bubble-header uppercase select-none pb-2">
                 LIVING WATER VBS 2026
             </h1>
         </div>
 
+        <!-- 3-Column Side-by-Side Desktop Layout Configuration -->
         <main class="max-w-[90rem] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative z-20">
             
-            <div class="lg:col-span-5">
+            <!-- ELEMENT 1: Elegant Storybook Registration Form Frame (Left Column - Spans 5) -->
+            <div class="lg:col-span-5" id="formContainer">
                 <div class="bg-white/90 backdrop-blur-md p-6 md:p-8 shadow-[0_15px_40px_rgba(140,170,200,0.12)] rounded-[2.5rem] border-2 border-sky-100/40">
-                    <form action="https://formspree.io/f/mqeokpwp" method="POST" class="space-y-6">
+                    <form id="vbsForm" action="https://formspree.io/f/mqeokpwp" method="POST" class="space-y-6">
                         
+                        <!-- Parent Info Block -->
                         <div>
                             <h3 class="vbs-accent-font text-base text-[#356396] mb-3 uppercase tracking-widest border-b-2 border-sky-100/60 pb-1">
                                 Parent / Guardian Details
@@ -140,6 +204,7 @@
                             </div>
                         </div>
 
+                        <!-- Child Attendee Info Block -->
                         <div>
                             <h3 class="vbs-accent-font text-base text-[#356396] mb-3 uppercase tracking-widest border-b-2 border-sky-100/60 pb-1">
                                 Child Information
@@ -156,6 +221,7 @@
                             </div>
                         </div>
 
+                        <!-- Medical Conditions & Safety Records Block -->
                         <div>
                             <h3 class="vbs-accent-font text-base text-[#bc4f5e] mb-3 uppercase tracking-widest border-b-2 border-rose-100 pb-1">
                                 Medical & Safety Notes
@@ -175,6 +241,7 @@
                         <input type="hidden" name="_subject" value="New Living Water VBS Registration">
                         <input type="text" name="_gotcha" style="display:none">
 
+                        <!-- Submit Action Trigger -->
                         <div class="pt-1">
                             <button type="submit" class="w-full block text-center bg-[#4f8ad1] hover:bg-[#3d75b9] text-white font-bold py-3.5 rounded-2xl shadow-md transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 vbs-accent-font text-base uppercase tracking-widest">
                                 Complete Registration
@@ -184,6 +251,14 @@
                 </div>
             </div>
 
+            <!-- ELEMENT 2: Hand-Drawn Styled Flyer Frame (Center Column - Spans 4) -->
+            <div class="lg:col-span-4">
+                <div class="bg-white p-3 rounded-[2rem] shadow-[0_10px_30px_rgba(160,190,220,0.15)] border border-sky-100/60 transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                    <img src="temp_images\Announcement_2.png" class="w-full h-auto rounded-[1.6rem] object-contain mx-auto" alt="Living Water VBS 2026 Event Flyer">
+                </div>
+            </div>
+
+            <!-- ELEMENT 3: Sandy-Gold Payment Interface Module (Right Column - Spans 3) -->
             <div class="lg:col-span-3">
                 <div class="bg-[#fef9eb] p-6 rounded-[2.5rem] border-2 border-[#f3e3be] shadow-md relative overflow-hidden">
                     <div class="absolute -top-10 -right-10 w-24 h-24 bg-[#fbf0cf]/40 rounded-full blur-xl"></div>
@@ -195,6 +270,7 @@
                         Registration: $10 Per Child. Places must be secured online ahead of the event start time.
                     </p>
                     
+                    <!-- Online Giving Portal Redirect Action Link -->
                     <a href="/giving.html" target="_blank" class="block text-center bg-[#dda538] hover:bg-[#ca9329] text-white font-bold py-3.5 px-4 rounded-2xl shadow-sm transition-all vbs-accent-font tracking-widest text-xs uppercase">
                         Go to Giving Page
                     </a>
@@ -209,16 +285,11 @@
                     </div>
                 </div>
             </div>
-
-            <div class="lg:col-span-4">
-                <div class="bg-white p-3 rounded-[2rem] shadow-[0_10px_30px_rgba(160,190,220,0.15)] border border-sky-100/60 transform rotate-1 hover:rotate-0 transition-transform duration-500">
-                    <img src="temp_images\Announcement_2.png" class="w-full h-auto rounded-[1.6rem] object-contain mx-auto" alt="Living Water VBS 2026 Event Flyer">
-                </div>
-            </div>
             
         </main>
     </div>
 
+    <!-- Global Footer Component -->
     <div id="footer-placeholder" class="mt-auto"></div>
 
 </body>
