@@ -65,6 +65,7 @@
             
             // Priority 3: Everything else
             await Promise.all([
+                loadComponent('vbs_index-palecholder', './components/vbs_index.html'),
                 loadComponent('photo-carousel-placeholder', './components/photo-carousel.html'),
                 loadComponent('announcements-placeholder', './components/announcements.html'),
                 loadComponent('footer-placeholder', './components/footer.html')
@@ -132,6 +133,8 @@
     </section>
 
     <div id="photo-carousel-placeholder"></div>
+
+    <div id="vbs_index-palecholder"></div>
 
     <div id="announcements-placeholder"></div>
 
