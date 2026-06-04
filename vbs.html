@@ -10,61 +10,73 @@
     <link href="/css/font-awesome.min.css" rel="stylesheet">
     <link href="/css/css2.css" rel="stylesheet">
     
-    <!-- Fredoka handles the rounded playful typography; Montserrat guides clean labels -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root { --primary: #1a1c1e; --accent: #c5a059; --cream: #f9f7f2; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--cream); margin: 0; overflow-x: hidden; }
-        h1, h2, h3, h4, .serif { font-family: 'Cormorant Garamond', serif; }
-        #header-placeholder { position: absolute; top: 0; width: 100%; z-index: 50; }
+        body { font-family: 'Montserrat', sans-serif; background-color: #111827; margin: 0; overflow-x: hidden; }
         
-        /* --- PREMIUM STORYBOOK WATERCOLOR AESTHETIC --- */
-        
-        /* Mimics the hand-painted, light pastel gradient from the sky down to the shoreline */
-        .vbs-canvas-bg { 
-            background: linear-gradient(180deg, #cae6ff 0%, #e3f2fd 30%, #fffdf6 65%, #fcf7e8 100%); 
+        /* --- FULL SCREEN DEEP OCEAN DRIFT BACKGROUND --- */
+        .vbs-ocean-viewport {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 35%, #0369a1 70%, #0284c7 100%);
+            background-size: 400% 400%;
+            animation: oceanCurrents 20s ease infinite;
         }
 
-        /* Replicates the exact bubbly letter style from image_887860.jpg with crisp blue outlines */
-        .vbs-bubble-header {
+        @keyframes oceanCurrents {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- THE TYPOGRAPHY ENGINE --- */
+        .vbs-underwater-title {
             font-family: 'Fredoka', sans-serif;
             font-weight: 700;
             color: #ffffff;
-            letter-spacing: 0.02em;
-            text-shadow: 
-                -3px -3px 0 #7caee6,  
-                 3px -3px 0 #7caee6,
-                -3px  3px 0 #7caee6,
-                 3px  3px 0 #7caee6,
-                -3px  0px 0 #7caee6,
-                 3px  0px 0 #7caee6,
-                 0px -3px 0 #7caee6,
-                 0px  3px 0 #7caee6,
-                 0px  6px 12px rgba(124, 174, 230, 0.35);
+            text-shadow: 0 0 20px rgba(14, 165, 233, 0.6), 0 0 40px rgba(14, 165, 233, 0.3);
         }
 
-        .vbs-accent-font {
+        .vbs-label {
             font-family: 'Fredoka', sans-serif;
-            font-weight: 600;
+            letter-spacing: 0.05em;
         }
 
-        .banner-details-text {
-            font-family: 'Montserrat', sans-serif;
-            letter-spacing: 0.08em;
+        /* --- ORGANIC OCEAN WAVE FORM FIELDS --- */
+        .ocean-input {
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(14, 165, 233, 0.3);
+            border-radius: 2rem;
+            color: #ffffff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Clean canvas input styles to fit the hand-drawn backdrop vibe */
-        .glass-input {
-            background-color: rgba(255, 255, 255, 0.9);
-            border: 2px solid rgba(179, 211, 245, 0.6);
-            transition: all 0.25s ease-in-out;
-        }
-        .glass-input:focus {
+        .ocean-input:focus {
             outline: none;
-            background-color: #ffffff;
-            border-color: #6ba4e8;
-            box-shadow: 0 0 0 4px rgba(107, 164, 232, 0.15);
+            border-color: #38bdf8;
+            background: rgba(15, 23, 42, 0.85);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.25);
+            transform: scale(1.01);
+        }
+
+        /* --- RISING BUBBLE GENERATOR ENGINE --- */
+        .bubble-fountain {
+            position: absolute;
+            bottom: -20px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(56,189,248,0.1) 100%);
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+            animation: riseUp linear infinite;
+        }
+
+        @keyframes riseUp {
+            0% { transform: translateY(0) translateX(0) scale(0.6); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-105vh) translateX(50px) scale(1.4); opacity: 0; }
         }
     </style>
 
@@ -74,166 +86,127 @@
                 const element = document.getElementById(id);
                 const response = await fetch(file);
                 if (!response.ok) return;
-
                 const html = await response.text();
                 element.innerHTML = html;
-
-                const scripts = element.querySelectorAll("script");
-                for (const oldScript of scripts) {
-                    const newScript = document.createElement("script");
-                    if (oldScript.src) {
-                        newScript.src = oldScript.src;
-                    } else {
-                         newScript.textContent = oldScript.textContent;
-                    }
-                    document.body.appendChild(newScript);
-                    oldScript.remove();
-                 }
-            } catch (error) {
-                console.error(`Error loading ${file}:`, error);
-            }
+            } catch (error) { console.error(`Error loading ${file}:`, error); }
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
             await loadComponent('header-placeholder', './components/header.html');
             await loadComponent('footer-placeholder', './components/footer.html');
             
-            // Seamless Formspree AJAX Intercept Logic
-            const form = document.getElementById('vbsForm');
-            const container = document.getElementById('formContainer');
-            
-            if (form) {
-                form.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    
-                    const submitBtn = form.querySelector('button[type="submit"]');
-                    submitBtn.disabled = true;
-                    submitBtn.innerText = "Saving Information...";
-                    
-                    const data = new FormData(form);
-                    
-                    try {
-                        const response = await fetch(form.action, {
-                            method: form.method,
-                            body: data,
-                            headers: { 'Accept': 'application/json' }
-                        });
-                        
-                        if (response.ok) {
-                            // Seamless dynamic transition to thank you screen and payment pointer
-                            container.innerHTML = `
-                                <div class="text-center py-8 px-4 space-y-6 animate-fade-in">
-                                    <h2 class="vbs-accent-font text-3xl text-sky-700 uppercase tracking-wide">
-                                        Thank You!
-                                    </h2>
-                                    <p class="text-slate-700 text-sm font-medium leading-relaxed max-w-md mx-auto">
-                                        Your child's registration details have been successfully saved for Living Water VBS 2026. We are so excited to have them join us!
-                                    </p>
-                                    <div class="w-12 h-1 bg-sky-200 mx-auto rounded-full my-4"></div>
-                                    <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-5 text-left space-y-3">
-                                        <p class="text-xs font-bold text-amber-800 uppercase tracking-wider flex items-center gap-2">
-                                            NOTICE:
-                                        </p>
-                                        <p class="text-xs text-slate-700 leading-relaxed font-medium">
-                                            To complete validation and lock in your child's placement, please ensure the <strong>$10 registration fee</strong> is submitted online. 
-                                        </p>
-                                        <p class="text-xs text-slate-700 leading-relaxed font-medium">
-                                            You can use the payment panel on the right side of your screen to navigate to the church portal, making sure to choose or note <strong>"VBS"</strong> during your confirmation. You may also pay in person at the church: 302 Millennium Drive Kyle, Texas 78640.
-                                        </p>
-                                    </div>
-                                </div>
-                            `;
-                        } else {
-                            throw new Error('Server side parsing error.');
-                        }
-                    } catch (error) {
-                        submitBtn.disabled = false;
-                        submitBtn.innerText = "Complete Registration";
-                        alert("Oops! There was a problem submitting your registration. Please try again or contact support.");
-                    }
-                });
+            // Generate continuous localized bubble fountain streams
+            const container = document.getElementById('bubbleCanvas');
+            if (container) {
+                for (let i = 0; i < 20; i++) {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'bubble-fountain';
+                    const size = Math.random() * 35 + 8;
+                    bubble.style.width = `${size}px`;
+                    bubble.style.height = `${size}px`;
+                    bubble.style.left = `${Math.random() * 100}%`;
+                    bubble.style.animationDuration = `${Math.random() * 6 + 6}s`;
+                    bubble.style.animationDelay = `${Math.random() * 8}s`;
+                    container.appendChild(bubble);
+                }
             }
         });
     </script>
 </head>
-<body class="text-slate-900 flex flex-col min-h-screen">
+<body class="text-white flex flex-col min-h-screen">
 
-    <!-- Global Header Component -->
     <div id="header-placeholder"></div>
 
-    <!-- Solid Navigation Spacing Carrier Block -->
-    <section class="relative bg-[#1a1c1e] pt-32 pb-4 text-center border-b-4 border-[#c5a059] z-10">
-    </section>
+    <!-- Solid Base Header Deck Anchor -->
+    <section class="relative bg-[#1a1c1e] pt-20 pb-0 border-b-4 border-[#c5a059] z-40"></section>
 
-    <!-- Main Dynamic Interface Layout Zone -->
-    <div class="vbs-canvas-bg flex-grow w-full py-16 px-4 md:px-6">
+    <!-- Full Viewport Ocean System Layout -->
+    <div class="vbs-ocean-viewport flex-grow w-full relative flex flex-col justify-between overflow-hidden" id="bubbleCanvas">
         
-        <!-- Whimsical Title Banner Section -->
-        <div class="max-w-7xl mx-auto text-center mb-12 tracking-wide">
-            <h1 class="text-5xl md:text-7xl vbs-bubble-header uppercase select-none pb-2">
-                LIVING WATER VBS 2026
-            </h1>
-        </div>
-
-        <!-- 3-Column Side-by-Side Desktop Layout Configuration -->
-        <main class="max-w-[90rem] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative z-20">
+        <!-- Header Ribbon Container Zone -->
+        <header class="w-full max-w-[95rem] mx-auto px-6 pt-12 relative z-30 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-4xl md:text-6xl vbs-underwater-title tracking-tight uppercase">
+                    Children VBS 2026
+                </h1>
+                <p class="text-xs uppercase tracking-widest text-sky-300 font-bold mt-1">
+                    Summer &bull; A Fountain of Life Church
+                </p>
+            </div>
             
-            <!-- ELEMENT 1: Elegant Storybook Registration Form Frame (Left Column - Spans 5) -->
-            <div class="lg:col-span-5" id="formContainer">
-                <div class="bg-white/90 backdrop-blur-md p-6 md:p-8 shadow-[0_15px_40px_rgba(140,170,200,0.12)] rounded-[2.5rem] border-2 border-sky-100/40">
-                    <form id="vbsForm" action="https://formspree.io/f/mqeokpwp" method="POST" class="space-y-6">
+            <!-- Floating Flat Dashboard Badge -->
+            <div class="bg-sky-500/10 border border-sky-400/30 px-6 py-2.5 rounded-full backdrop-blur-md text-xs font-bold uppercase tracking-widest text-sky-200 flex items-center gap-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Registration Open
+            </div>
+        </header>
+
+        <!-- Main Fluid Symmetrical Layout Area -->
+        <main class="w-full max-w-[95rem] mx-auto px-4 md:px-8 py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch flex-grow relative z-20">
+            
+            <!-- LEFT PANEL DECK: Form + Payments Module Stack -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+                
+                <!-- Registration Form Control Panel -->
+                <section class="bg-slate-900/40 border border-white/10 p-6 md:p-10 rounded-[2.5rem] backdrop-blur-xl shadow-2xl relative overflow-hidden flex-grow">
+                    <form id="vbsForm" action="https://formspree.io/f/mqeokpwp" method="POST" class="space-y-8">
                         
-                        <!-- Parent Info Block -->
+                        <!-- Section 1: Guardian Profiles -->
                         <div>
-                            <h3 class="vbs-accent-font text-base text-[#356396] mb-3 uppercase tracking-widest border-b-2 border-sky-100/60 pb-1">
-                                Parent / Guardian Details
-                            </h3>
-                            <div class="grid md:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1" for="parent_name">Your Full Name *</label>
-                                    <input type="text" id="parent_name" name="Parent Name" required class="w-full glass-input p-3 rounded-xl text-sm">
+                            <div class="flex items-center gap-3 mb-4 border-b border-white/10 pb-2">
+                                <div class="w-8 h-8 rounded-full bg-sky-500/20 flex items-center justify-center text-sky-300 text-xs">01</div>
+                                <h3 class="vbs-label uppercase tracking-widest text-sm text-sky-200 font-bold">Guardian Info</h3>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold uppercase tracking-wider text-sky-300/70 block pl-2" for="parent_name">Full Name</label>
+                                    <input type="text" id="parent_name" name="Parent Name" required class="w-full ocean-input p-3.5 text-sm">
                                 </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1" for="parent_phone">Phone Number *</label>
-                                    <input type="tel" id="parent_phone" name="Parent Phone" required class="w-full glass-input p-3 rounded-xl text-sm">
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold uppercase tracking-wider text-sky-300/70 block pl-2" for="parent_phone">Phone Number</label>
+                                    <input type="tel" id="parent_phone" name="Parent Phone" required class="w-full ocean-input p-3.5 text-sm">
                                 </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1" for="parent_email">Email Address *</label>
-                                    <input type="email" id="parent_email" name="_replyto" required class="w-full glass-input p-3 rounded-xl text-sm">
+                                <div class="md:col-span-2 space-y-1">
+                                    <label class="text-[10px] font-bold uppercase tracking-wider text-sky-300/70 block pl-2" for="parent_email">Email</label>
+                                    <input type="email" id="parent_email" name="_replyto" required class="w-full ocean-input p-3.5 text-sm">
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Child Attendee Info Block -->
+                        <!-- Section 2: Child Configuration Profiles -->
                         <div>
-                            <h3 class="vbs-accent-font text-base text-[#356396] mb-3 uppercase tracking-widest border-b-2 border-sky-100/60 pb-1">
-                                Child Information
-                            </h3>
-                            <div class="grid md:grid-cols-3 gap-3">
-                                <div class="md:col-span-2">
-                                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1" for="child_name">Child's Name *</label>
-                                    <input type="text" id="child_name" name="Child Name" required class="w-full glass-input p-3 rounded-xl text-sm">
+                            <div class="flex items-center gap-3 mb-4 border-b border-white/10 pb-2">
+                                <div class="w-8 h-8 rounded-full bg-sky-500/20 flex items-center justify-center text-sky-300 text-xs">02</div>
+                                <h3 class="vbs-label uppercase tracking-widest text-sm text-sky-200 font-bold">Children (Separate using columns: Abigail, Penny, etc.)</h3>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div class="md:col-span-3 space-y-1">
+                                    <label class="text-[10px] font-bold uppercase tracking-wider text-sky-300/70 block pl-2" for="child_name">Full Names</label>
+                                    <input type="text" id="child_name" name="Child Name" required class="w-full ocean-input p-3.5 text-sm">
                                 </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1" for="child_age">Age (5-12) *</label>
-                                    <input type="number" id="child_age" name="Child Age" min="5" max="12" required class="w-full glass-input p-3 rounded-xl text-sm" placeholder="5-12">
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold uppercase tracking-wider text-sky-300/70 block pl-2" for="child_age">Age Range</label>
+                                    <input type="number" id="child_age" name="Child Age" min="5" max="12" required class="w-full ocean-input p-3.5 text-sm" placeholder="5-12">
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Medical Conditions & Safety Records Block -->
+                        <!-- Section 3: Safety Configuration Controls -->
                         <div>
-                            <h3 class="vbs-accent-font text-base text-[#bc4f5e] mb-3 uppercase tracking-widest border-b-2 border-rose-100 pb-1">
-                                Medical & Safety Notes
-                            </h3>
-                            <div class="space-y-3">
-                                <div>
-                                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1" for="allergies">Allergies / Special Requirements</label>
-                                    <textarea id="allergies" name="Allergies & Medical" rows="2" class="w-full glass-input p-3 rounded-xl text-sm" placeholder="Please mention food allergies or concerns..."></textarea>
+                            <div class="flex items-center gap-3 mb-4 border-b border-white/10 pb-2">
+                                <div class="w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-300 text-xs">03</div>
+                                <h3 class="vbs-label uppercase tracking-widest text-sm text-rose-200 font-bold">Emergency Contacts & Info</h3>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold uppercase tracking-wider text-rose-300/70 block pl-2" for="allergies">Medical Info</label>
+                                    <textarea id="allergies" name="Allergies & Medical" rows="2" class="w-full ocean-input p-3.5 text-sm" placeholder="allergies, medical conditions..."></textarea>
                                 </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1" for="emergency_contact">Emergency Contact * (Name & Phone)</label>
-                                    <input type="text" id="emergency_contact" name="Emergency Contact" required class="w-full glass-input p-3 rounded-xl text-sm" placeholder="e.g. Abigail Baker - 737-123-4567">
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold uppercase tracking-wider text-rose-300/70 block pl-2" for="emergency_contact">Emergency Contact</label>
+                                    <input type="text" id="emergency_contact" name="Emergency Contact" required class="w-full ocean-input p-3.5 text-sm" placeholder="Name & Phone">
                                 </div>
                             </div>
                         </div>
@@ -241,56 +214,63 @@
                         <input type="hidden" name="_subject" value="New Living Water VBS Registration">
                         <input type="text" name="_gotcha" style="display:none">
 
-                        <!-- Submit Action Trigger -->
-                        <div class="pt-1">
-                            <button type="submit" class="w-full block text-center bg-[#4f8ad1] hover:bg-[#3d75b9] text-white font-bold py-3.5 rounded-2xl shadow-md transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 vbs-accent-font text-base uppercase tracking-widest">
-                                Complete Registration
+                        <!-- Core Action Execution Trigger -->
+                        <div class="pt-2">
+                            <button type="submit" class="w-full block text-center bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-bold py-4 rounded-2xl shadow-xl transition-all duration-300 vbs-label text-sm uppercase tracking-widest border border-sky-400/40">
+                                Submit Form
                             </button>
                         </div>
                     </form>
-                </div>
+                </section>
+
+                <!-- Transaction Hub Module Frame (Anchored Bottom Left) -->
+                <section class="bg-slate-900/90 border-2 border-sky-400 p-6 rounded-[2.5rem] shadow-[0_0_30px_rgba(56,189,248,0.15)] text-white relative overflow-hidden">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-3 mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-sky-400/20 flex items-center justify-center text-sky-400 text-sm">
+                                $
+                            </div>
+                            <div>
+                                <h4 class="vbs-label text-sky-400 text-sm uppercase tracking-wider font-extrabold">Required Payment</h4>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">$10 Per Child</p>
+                            </div>
+                        </div>
+                        <div class="bg-white/5 px-3 py-1 rounded-xl border border-white/5">
+                            <p class="text-[10px] text-slate-300 font-medium uppercase tracking-wide">
+                                Placements using Secure Give
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <div class="md:col-span-2">
+                            <div class="bg-emerald-500/10 text-emerald-400 font-extrabold p-3 rounded-xl text-center md:text-left text-[10px] tracking-wider uppercase border border-emerald-500/20">
+                                Select "VBS" in the fund dropdown menu
+                            </div>
+                        </div>
+                        <div>
+                            <a href="https://app.securegive.com/AFountain/a-fountain-of-life" target="_blank" class="block text-center bg-sky-500 hover:bg-sky-600 text-white font-black py-3 px-4 rounded-2xl shadow-xl transition-all duration-300 vbs-label text-[11px] uppercase tracking-widest border border-sky-400/40">
+                                Open Payment Portal
+                            </a>
+                        </div>
+                    </div>
+                </section>
             </div>
 
-            <!-- ELEMENT 2: Hand-Drawn Styled Flyer Frame (Center Column - Spans 4) -->
-            <div class="lg:col-span-4">
-                <div class="bg-white p-3 rounded-[2rem] shadow-[0_10px_30px_rgba(160,190,220,0.15)] border border-sky-100/60 transform rotate-1 hover:rotate-0 transition-transform duration-500">
-                    <img src="temp_images\Announcement_2.png" class="w-full h-auto rounded-[1.6rem] object-contain mx-auto" alt="Living Water VBS 2026 Event Flyer">
-                </div>
-            </div>
-
-            <!-- ELEMENT 3: Sandy-Gold Payment Interface Module (Right Column - Spans 3) -->
-            <div class="lg:col-span-3">
-                <div class="bg-[#fef9eb] p-6 rounded-[2.5rem] border-2 border-[#f3e3be] shadow-md relative overflow-hidden">
-                    <div class="absolute -top-10 -right-10 w-24 h-24 bg-[#fbf0cf]/40 rounded-full blur-xl"></div>
-                    
-                    <h4 class="vbs-accent-font text-[#5e4919] text-lg mb-2 uppercase tracking-wider">
-                        Registration Payment
-                    </h4>
-                    <p class="text-[11px] text-[#755f2d] font-bold mb-4 leading-relaxed banner-details-text uppercase">
-                        Registration: $10 Per Child. Places must be secured online ahead of the event start time.
-                    </p>
-                    
-                    <!-- Online Giving Portal Redirect Action Link -->
-                    <a href="https://app.securegive.com/AFountain/a-fountain-of-life" target="_blank" class="block text-center bg-[#dda538] hover:bg-[#ca9329] text-white font-bold py-3.5 px-4 rounded-2xl shadow-sm transition-all vbs-accent-font tracking-widest text-xs uppercase">
-                        Go to Giving Page
-                    </a>
-
-                    <div class="mt-4 bg-white/95 p-3.5 rounded-xl border border-[#ebd8ab] text-[11px] text-slate-700 space-y-1.5">
-                        <p class="font-bold text-rose-600 uppercase tracking-wider">
-                            Required Action:
-                        </p>
-                        <p class="leading-relaxed font-medium">
-                            When filling out the checkout details on the church giving platform, you <strong>must specify or select "VBS"</strong> in the fund menu or comment line area.
-                        </p>
+            <!-- RIGHT PANEL DECK: Banner Media Column (Symmetrical Container) -->
+            <section class="lg:col-span-5 flex flex-col h-full">
+                <div class="bg-slate-900/40 border border-white/10 p-6 rounded-[2.5rem] backdrop-blur-xl shadow-2xl flex flex-col items-center justify-center flex-grow h-full min-h-[450px]">
+                    <div class="w-full h-full bg-slate-950/40 p-4 rounded-[2rem] border border-white/10 shadow-inner flex items-center justify-center overflow-hidden">
+                        <img src="temp_images\Announcement_2.png" class="w-full h-full object-contain rounded-2xl mix-blend-lighten" alt="VBS Event Media Sheet">
                     </div>
                 </div>
-            </div>
-            
-        </main>
-    </div>
+            </section>
 
-    <!-- Global Footer Component -->
-    <div id="footer-placeholder" class="mt-auto"></div>
+        </main>
+
+        <!-- Global Footer Component Anchor -->
+        <div id="footer-placeholder" class="w-full mt-auto relative z-30"></div>
+    </div>
 
 </body>
 </html>

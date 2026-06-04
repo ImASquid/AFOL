@@ -1,0 +1,63 @@
+<!-- Styles localized directly inside the component card scope -->
+<style>
+    .vbs-promo-bg {
+        background: linear-gradient(135deg, #cae6ff 0%, #e3f2fd 40%, #fffdf6 100%);
+    }
+    .vbs-bubble-text {
+        font-family: 'Fredoka', sans-serif;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: 0.01em;
+        text-shadow: 
+            -2px -2px 0 #7caee6,  
+             2px -2px 0 #7caee6,
+            -2px  2px 0 #7caee6,
+             2px  2px 0 #7caee6,
+             0px  4px 8px rgba(124, 174, 230, 0.4);
+    }
+    .vbs-font-play {
+        font-family: 'Fredoka', sans-serif;
+        font-weight: 600;
+    }
+</style>
+
+<section id="vbs-home-feature" class="py-20 bg-white border-t border-slate-100">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+        <div class="vbs-promo-bg rounded-[3rem] p-8 md:p-12 shadow-[0_20px_50px_rgba(150,180,210,0.18)] border border-sky-100/60 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <!-- Information Callout Block -->
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <span class="text-sky-600 font-bold tracking-[0.25em] text-xs uppercase block vbs-font-play">Summer Event Spotlight</span>
+                <h2 class="text-4xl md:text-5xl vbs-bubble-text uppercase select-none leading-none">
+                    Living Water VBS 2026
+                </h2>
+                <p class="text-slate-600 text-sm md:text-base leading-relaxed max-w-xl font-medium">
+                    Join us for an unforgettable experince in God's Word! Children ages 5–12 will dive deep into interactive Bible lessons, playful games, beautiful crafts, and wonderful dynamic fellowship.
+                </p>
+                
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    <span class="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-xl border border-sky-100/40 text-sky-700 flex items-center gap-2">
+                        Ages 5-12
+                    </span>
+                    <span class="bg-amber-50/80 backdrop-blur-sm px-4 py-2 rounded-xl border border-amber-200/40 text-amber-800 flex items-center gap-2">
+                        $10 Registration Fee
+                    </span>
+                </div>
+
+                <div class="pt-4">
+                    <a href="/vbs.html" class="inline-block text-center bg-[#4f8ad1] hover:bg-[#3d75b9] text-white font-bold py-4 px-10 rounded-2xl shadow-md transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 vbs-font-play text-sm uppercase tracking-widest">
+                        Register Now
+                    </a>
+                </div>
+            </div>
+
+            <!-- Graphic Image Wrapper Element -->
+            <div class="lg:col-span-5 w-full max-w-sm mx-auto lg:max-w-none">
+                <div class="bg-white p-2.5 rounded-[2.2rem] shadow-lg border border-sky-100/40 transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                    <img src="temp_images\Announcement_2.png" class="w-full h-auto rounded-[1.6rem] object-contain" alt="Living Water VBS Flyer">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
