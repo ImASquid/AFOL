@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | A Fountain of Life Worship Center</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    
+    <script src="/js/tailwind.js"></script>
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --primary: #1a1c1e; 
+            --accent: #c5a059; 
+            --cream: #fbfaf7; 
+        }
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--cream); 
+            margin: 0; 
+            overflow-x: hidden; 
+        }
+        h1, h2, h3, h4, .serif-font { 
+            font-family: 'Cormorant Garamond', serif; 
+        }
+        #header-placeholder { 
+            position: absolute; 
+            top: 0; 
+            width: 100%; 
+            z-index: 50; 
+        }
+        
+        .church-canvas-bg { 
+            background: radial-gradient(circle at top, #ffffff 0%, #f7f5f0 70%, #f1ece1 100%); 
+        }
+    </style>
+
+    <script>
+        async function loadComponent(id, file) {
+            try {
+                const element = document.getElementById(id);
+                const response = await fetch(file);
+                if (!response.ok) return;
+
+                const html = await response.text();
+                element.innerHTML = html;
+            } catch (error) {
+                console.error(`Error loading ${file}:`, error);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadComponent('header-placeholder', './components/header.html');
+            await loadComponent('footer-placeholder', './components/footer.html');
+        });
+    </script>
+</head>
+<body class="text-slate-900 flex flex-col min-h-screen">
+
+    <div id="header-placeholder"></div>
+
+    <section class="relative bg-[#1a1c1e] pt-32 pb-4 text-center border-b-4 border-[#c5a059] z-10">
+    </section>
+
+    <div class="church-canvas-bg flex-grow w-full flex items-center justify-center py-24 px-4">
+        <div class="max-w-2xl w-full text-center space-y-8 relative z-20">
+            
+            <div class="space-y-2">
+                <h1 class="text-7xl md:text-8xl font-medium tracking-tight text-[#1a1c1e] opacity-80 italic">
+                    404
+                </h1>
+                <div class="w-16 h-[2px] bg-[#c5a059] mx-auto my-4"></div>
+                <h2 class="serif-font text-3xl md:text-4xl text-[#1a1c1e] font-semibold tracking-wide uppercase">
+                    Page Not Found
+                </h2>
+            </div>
+
+            <p class="text-slate-600 font-medium max-w-md mx-auto leading-relaxed text-sm md:text-base">
+                The content you are searching for has been removed, or is temporarily unavailable. We apologize for any inconvenience.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto pt-4">
+                <a href="/" class="flex-1 text-center bg-[#1a1c1e] hover:bg-slate-800 text-white font-semibold py-4 px-6 rounded-xl border border-transparent shadow-sm tracking-widest text-xs uppercase transition-all duration-200">
+                    Return Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder" class="mt-auto"></div>
+</body>
+</html>
